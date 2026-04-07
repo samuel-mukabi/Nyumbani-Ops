@@ -1,14 +1,32 @@
 'use client'
 
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {FadeIn} from "@/components/landing/FadeIn";
+import { createClient } from "@/lib/supabase/client";
+import { LogOut } from 'lucide-react';
 
 const Navbar = () => {
     const pathname = usePathname();
     const [clickedLink, setClickedLink] = useState<number | null>(null);
+    const [user, setUser] = useState<any>(null);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        }
+        getUser();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [supabase]);
 
     const links = [
         {label: 'Features', href: '/features'},
@@ -47,7 +65,22 @@ const Navbar = () => {
                         })}
                     </div>
                     <div className="flex items-center gap-4">
-                        <Button variant='default' size='lg' className="hidden sm:inline-flex">Get Started</Button>
+                        {user ? (
+                            <div className="flex items-center gap-4">
+                                <Link href="/dashboard">
+                                    <Button variant='default' size='lg' className="hidden sm:inline-flex">Dashboard</Button>
+                                </Link>
+                                <form action="/auth/sign-out" method="post">
+                                    <button type="submit" className="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant hover:text-primary transition-colors">
+                                        <LogOut className="w-5 h-5" />
+                                    </button>
+                                </form>
+                            </div>
+                        ) : (
+                            <Link href="/sign-in">
+                                <Button variant='default' size='lg' className="hidden sm:inline-flex">Get Started</Button>
+                            </Link>
+                        )}
                     </div>
                 </nav>
             </FadeIn>

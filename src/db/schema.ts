@@ -3,21 +3,20 @@ import { relations } from 'drizzle-orm';
 
 export const organizations = pgTable('organizations', {
   id: serial('id').primaryKey(),
-  clerkId: varchar('clerk_id', { length: 255 }).notNull().unique(),
   name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }),
+  slug: varchar('slug', { length: 255 }).unique(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  clerkId: varchar('clerk_id', { length: 255 }).notNull().unique(),
+  authId: varchar('auth_id', { length: 255 }).unique(), // Supabase auth.uid(). Nullable for headless staff.
   email: varchar('email', { length: 255 }).notNull(),
   firstName: varchar('first_name', { length: 255 }),
   lastName: varchar('last_name', { length: 255 }),
   role: varchar('role', { length: 50 }).notNull().default('host'), // host, manager, cleaner
-  organizationId: varchar('organization_id', { length: 255 }), // Clerk Org ID
+  organizationId: integer('organization_id').references(() => organizations.id),
   phoneNumber: varchar('phone_number', { length: 20 }), // for clean payouts via M-Pesa
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
@@ -25,7 +24,7 @@ export const users = pgTable('users', {
 
 export const properties = pgTable('properties', {
   id: serial('id').primaryKey(),
-  organizationId: varchar('organization_id', { length: 255 }).notNull(),
+  organizationId: integer('organization_id').references(() => organizations.id).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   address: text('address'),

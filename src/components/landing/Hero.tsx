@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { FadeIn } from './FadeIn';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Globe, Smartphone, MessageCircle } from 'lucide-react';
@@ -19,26 +20,30 @@ const Hero = () => {
           <div className="max-w-2xl">
             <FadeIn delay={0}>
               <h1 className="text-6xl lg:text-[7.5rem] font-black leading-[1.1] tracking-tighter mb-10 text-foreground">
-                Operations, <br/>
-                <span className="text-primary italic font-serif">Liberated.</span>
+                Property Management, <br/>
+                <span className="text-primary italic font-serif">Made Simple.</span>
               </h1>
             </FadeIn>
             
             <FadeIn delay={100}>
               <p className="text-xl lg:text-2xl text-on-surface-variant mb-12 leading-relaxed max-w-xl font-light italic">
-                Experience a world without boxes. <strong className='font-bold'>Nyumbani-Ops </strong>provides the fluid intelligence to automate your propertys&#39;  ecosystem with hospitality-grade grace.
+                Experience a world without stress. <strong className='font-bold'>Nyumbani-Ops </strong>provides the tools to automate your properties with ease.
               </p>
             </FadeIn>
             
             <FadeIn delay={200}>
               <div className="flex flex-col sm:flex-row gap-6 mb-16">
-                <Button size="lg" className="h-16 px-10 rounded-xl text-lg font-bold group shadow-2xl shadow-primary/20">
-                  Start Today
-                  <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-2 transition-transform" />
-                </Button>
-                <button className="h-16 px-10 text-lg font-bold text-on-surface cursor-pointer hover:text-primary transition-colors flex items-center justify-center underline decoration-primary/30 decoration-2 underline-offset-8">
-                  View Live Methodology
-                </button>
+                <Link href="/dashboard">
+                  <Button size="lg" className="h-16 px-10 rounded-xl text-lg font-bold group shadow-2xl shadow-primary/20 cursor-pointer">
+                    Start Today
+                    <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-2 transition-transform" />
+                  </Button>
+                </Link>
+                <Link href="/howitworks">
+                  <button className="h-16 px-10 text-lg font-bold text-on-surface cursor-pointer hover:text-primary transition-colors flex items-center justify-center underline decoration-primary/30 decoration-2 underline-offset-8">
+                    See How It Works
+                  </button>
+                </Link>
               </div>
             </FadeIn>
 
@@ -46,15 +51,15 @@ const Hero = () => {
                 <div className="flex flex-wrap items-center gap-12 text-on-surface-variant/60">
                     <div className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        <span className="text-xs font-bold uppercase tracking-widest">Enterprise Ready</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">Easy to Use</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
-                        <span className="text-xs font-bold uppercase tracking-widest">Global Payouts</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">Fast Payouts</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-tertiary" />
-                        <span className="text-xs font-bold uppercase tracking-widest">24/7 Concierge</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">24/7 Support</span>
                     </div>
                 </div>
             </FadeIn>
@@ -66,13 +71,13 @@ const Hero = () => {
             {/* Background Narrative Typography */}
             <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none overflow-hidden">
                 <div className="text-[12rem] lg:text-[20rem] font-black text-primary/5 tracking-tighter leading-none italic font-serif -rotate-12 translate-x-20">
-                    CORE
+                    EASY
                 </div>
                 <div className="absolute top-0 right-0 text-7xl font-bold text-secondary/5 tracking-widest uppercase">
-                    Flow
+                    Simple
                 </div>
                 <div className="absolute bottom-20 left-0 text-7xl font-bold text-tertiary/5 tracking-widest uppercase -rotate-90">
-                    Sync
+                    Fast
                 </div>
             </div>
 
@@ -81,7 +86,7 @@ const Hero = () => {
                 <div className="absolute inset-0 bg-primary/10 rounded-full animate-pulse" />
                 <div className="text-center space-y-2">
                     <Sparkles className="w-12 h-12 text-primary mx-auto mb-2 animate-bounce-slow" />
-                    <div className="text-[10px] font-bold tracking-[0.4em] text-primary uppercase">Active Intelligence</div>
+                    <div className="text-[10px] font-bold tracking-[0.4em] text-primary uppercase">Smart Platform</div>
                 </div>
                 
                 {/* Connection Lines (SVG) */}

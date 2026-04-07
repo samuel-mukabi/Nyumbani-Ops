@@ -8,29 +8,29 @@ const Features = () => {
   const features = [
     {
       title: 'Intelligent Scheduling',
-      subtitle: 'Dynamic Logistics',
-      description: 'AI-driven calendar management that optimizes routes, resources, and availability effortlessly. Our system learns your operational patterns to predict and prevent scheduling bottlenecks.',
+      subtitle: 'Easy Scheduling',
+      description: 'Manage routes, resources, and availability effortlessly. Our calendar predicts and prevents double bookings.',
       icon: <CalendarCheck className="w-5 h-5" />,
       tag: 'Automation'
     },
     {
       title: 'Unified Dashboard',
-      subtitle: 'Strategic Oversight',
-      description: 'Monitor your entire organization from a single, beautiful interface. Real-time analytics provide clarity where there was once operational noise, allowing for data-backed growth.',
+      subtitle: 'Everything in One Place',
+      description: 'Monitor all your properties from a single, simple interface. Clear analytics help you make data-driven decisions to grow your business.',
       icon: <Layers className="w-5 h-5" />,
       tag: 'Analytics'
     },
     {
       title: 'Automated Workflows',
-      subtitle: 'Seamless Ops',
-      description: 'Deploy hospitality-grade automation for repetitive tasks. From guest communication to tax compliance, our workflows execute with the precision and grace of a digital concierge.',
+      subtitle: 'Save Time',
+      description: 'Let us handle the repetitive tasks. From guest communication to tax filing, our tools work silently in the background.',
       icon: <Bot className="w-5 h-5" />,
       tag: 'Efficiency'
     },
     {
       title: 'Enterprise Security',
-      subtitle: 'Guardian Suite',
-      description: 'Bank-grade encryption and role-based access control ensure your organizational data remains pristine. Comprehensive audit logs provide a transparent trail for every action.',
+      subtitle: 'Peace of Mind',
+      description: 'Bank-grade encryption ensures your property data remains secure. Comprehensive logs provide a clear trail for every action your team takes.',
       icon: <Shield className="w-5 h-5" />,
       tag: 'Security'
     }
@@ -44,15 +44,15 @@ const Features = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-32 gap-8 px-4">
           <FadeIn className="max-w-2xl">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs mb-4 block">The Ecosystem</span>
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs mb-4 block">How We Help</span>
             <h2 className="text-5xl lg:text-[6rem] font-bold text-foreground leading-none tracking-tighter">
-              Operational brilliance, <br/>
-              <span className="text-primary italic font-serif">liberated.</span>
+              Managing properties, <br/>
+              <span className="text-primary italic font-serif">made effortless.</span>
             </h2>
           </FadeIn>
           <FadeIn delay={200} className="lg:max-w-xs">
             <p className="text-lg text-on-surface-variant leading-relaxed font-light italic">
-              Discard the boxes. Experience a suite of tools that breathe and grow with your organization.
+              Replace spreadsheets and scattered apps with a single, easy-to-use platform.
             </p>
           </FadeIn>
         </div>

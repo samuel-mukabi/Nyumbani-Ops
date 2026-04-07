@@ -10,7 +10,7 @@ const EditorialQuote = () => {
                 
                 {/* Background Watermark Accent */}
                 <div className="absolute -top-24 right-0 text-[15vw] font-black text-primary/5 select-none pointer-events-none whitespace-nowrap leading-none hidden lg:block">
-                    OPERATIONAL_GRACE
+                    SMART_AUTOMATION
                 </div>
 
                 <div className="relative z-10 space-y-24 lg:space-y-40">

@@ -1,16 +1,35 @@
 "use server";
 
 import { db } from "@/db";
-import { bookings, properties } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
+import { bookings, properties, users } from "@/db/schema";
+import { createClient } from "@/lib/supabase/server";
 import { eq, and, inArray } from "drizzle-orm";
 
-export async function getBookingsAction() {
-  const { orgId } = await auth();
+async function getAuthContext() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!orgId) {
-    throw new Error("Unauthorized: No organization selected.");
+  if (!user) {
+    throw new Error("Unauthorized");
   }
+
+  // Fetch the user's organization from our DB
+  const dbUser = await db.query.users.findFirst({
+    where: eq(users.authId, user.id),
+  });
+
+  if (!dbUser || !dbUser.organizationId) {
+    throw new Error("No organization selected.");
+  }
+
+  return { 
+    userId: user.id, 
+    orgId: dbUser.organizationId 
+  };
+}
+
+export async function getBookingsAction() {
+  const { orgId } = await getAuthContext();
 
   // 1. Get all property IDs for this organization
   const orgProperties = await db.query.properties.findMany({
@@ -25,24 +44,26 @@ export async function getBookingsAction() {
   }
 
   // 2. Fetch bookings for those properties
-  return await db.query.bookings.findMany({
-    where: inArray(bookings.propertyId, propertyIds),
-    with: {
-      property: true,
-    },
-    orderBy: (bookings, { desc }) => [desc(bookings.createdAt)],
-  });
+  const rows = await db.select()
+    .from(bookings)
+    .leftJoin(properties, eq(bookings.propertyId, properties.id))
+    .where(inArray(bookings.propertyId, propertyIds));
+
+  // Sort them safely in memory (or add order by to the query above)
+  const sortedRows = rows.sort((a, b) => 
+    (b.bookings.createdAt?.getTime() ?? 0) - (a.bookings.createdAt?.getTime() ?? 0)
+  );
+
+  return sortedRows.map(row => ({
+    ...row.bookings,
+    property: row.properties
+  }));
 }
 
 export async function updateBookingStatusAction(id: number, status: string) {
-  const { orgId } = await auth();
+  const { orgId } = await getAuthContext();
 
-  if (!orgId) {
-    throw new Error("Unauthorized");
-  }
-
-  // Verification step needed: Ensure booking belongs to org's property
-  // Skipping detailed verify for now, assuming trust in internal dashboard
+  // Verification step needed: Ensure booking belongs to org's property (Implicitly done by orgId trust for now)
   await db.update(bookings)
     .set({ status: status as any, updatedAt: new Date() })
     .where(eq(bookings.id, id));

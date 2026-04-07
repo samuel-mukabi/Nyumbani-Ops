@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { FadeIn } from './FadeIn';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
@@ -20,11 +21,11 @@ const CTA = () => {
             <FadeIn direction="right">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-surface-dim mb-10">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-on-surface-variant uppercase tracking-widest text-[10px]">Your Next Chapter</span>
+                <span className="text-sm font-medium text-on-surface-variant uppercase tracking-widest text-[10px]">Get Started Today</span>
               </div>
               <h2 className="text-5xl lg:text-8xl font-black text-foreground leading-[0.9] tracking-tighter mb-8">
-                Ready for the <br/>
-                <span className="text-primary italic font-serif">premium touch?</span>
+                Ready to <br/>
+                <span className="text-primary italic font-serif">save time?</span>
               </h2>
             </FadeIn>
           </div>
@@ -33,19 +34,21 @@ const CTA = () => {
           <div className="space-y-12">
             <FadeIn delay={200} direction="up">
               <p className="text-2xl lg:text-3xl text-on-surface-variant font-light leading-relaxed italic">
-                Join the exclusive club of hospitality leaders who have transformed their operations with Nyumbani-Ops.
+                Join the smart property managers who use Nyumbani-Ops to run their business smoothly.
               </p>
             </FadeIn>
 
             <FadeIn delay={400} direction="up">
               <div className="flex flex-col sm:flex-row gap-6">
-                <Button size="lg" className="h-16 px-10 rounded-xl text-lg font-bold group shadow-2xl shadow-primary/20">
-                  Begin Onboarding
-                  <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-2 transition-transform" />
-                </Button>
-                <button className="h-16 px-10 text-lg font-bold text-on-surface hover:text-primary transition-colors flex items-center justify-center">
+                <Link href="/dashboard">
+                  <Button size="lg" className="h-16 px-10 rounded-xl text-lg font-bold group shadow-2xl shadow-primary/20 cursor-pointer">
+                    Create Free Account
+                    <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-2 transition-transform" />
+                  </Button>
+                </Link>
+                <a href="mailto:hello@nyumbani-ops.com" className="h-16 px-10 text-lg font-bold text-on-surface hover:text-primary transition-colors flex items-center justify-center">
                   Contact the Team
-                </button>
+                </a>
               </div>
               
               <div className="mt-12 flex items-center gap-8 text-on-surface-variant/60">
@@ -55,7 +58,7 @@ const CTA = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-primary" />
-                  <span className="text-xs font-bold uppercase tracking-widest">14-Day Concierge Trial</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">14-Day Free Trial</span>
                 </div>
               </div>
             </FadeIn>
@@ -66,7 +69,7 @@ const CTA = () => {
 
       {/* Background Typography - Subtle large watermark */}
       <div className="absolute -bottom-10 right-10 text-[20rem] font-black text-primary/5 select-none pointer-events-none leading-none tracking-tighter font-serif">
-        Premium
+        Start
       </div>
     </section>
   );

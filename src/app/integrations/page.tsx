@@ -105,7 +105,7 @@ const Integrations = () => {
                     <div className="space-y-0">
                         {integrations.map((item, index) => (
                             <FadeIn key={index} delay={index * 50} direction="up">
-                                <div className="group py-12 lg:py-16 border-t border-surface-dim first:border-t-0 flex flex-col lg:flex-row gap-12 lg:items-center relative">
+                                <div className="group py-12 px-10 lg:py-16 border-t border-surface-dim first:border-t-0 flex flex-col lg:flex-row gap-12 lg:items-center relative">
                                     
                                     {/* Icon & Category */}
                                     <div className="lg:w-1/4 flex items-center gap-6">
@@ -152,7 +152,7 @@ const Integrations = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center">
                             
                             {/* Visual Side - Integration Map (Floating Nodes) */}
-                            <div className="relative h-64 lg:h-[400px] flex items-center justify-center overflow-hidden">
+                            <div className="relative h-64 lg:h-100 flex items-center justify-center overflow-hidden">
                                 <div className="absolute inset-0 opacity-10">
                                     <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-primary" />
                                     <div className="absolute top-1/2 left-3/4 w-3 h-3 rounded-full bg-secondary" />
@@ -172,8 +172,8 @@ const Integrations = () => {
                                 <FadeIn direction="left">
                                     <span className="text-xs font-bold tracking-widest text-primary uppercase mb-8 block">Custom Engineering</span>
                                     <h3 className="text-4xl lg:text-7xl font-bold text-foreground mb-8 tracking-tighter leading-[0.9]">
-                                        Don't see your favorite tool? <br/>
-                                        <span className="text-primary italic font-serif">We'll engineer it.</span>
+                                        Don&#39;t see your favorite tool? <br/>
+                                        <span className="text-primary italic font-serif">We&#39;ll engineer it.</span>
                                     </h3>
                                     <p className="text-xl lg:text-2xl text-on-surface-variant mb-12 leading-relaxed font-light italic">
                                         Our digital concierge service extends beyond the screen. Our engineers are ready to build the custom bridges your organization unique needs.

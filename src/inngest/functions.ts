@@ -1,8 +1,9 @@
 import { inngest } from "./client";
+import { cron, eventType } from "inngest";
 
 export const syncAirbnbCalendar = inngest.createFunction(
-  { id: "sync-airbnb-calendar", cron: "*/15 * * * *" } as any,
-  async ({ step }: { step: any }) => {
+  { id: "sync-airbnb-calendar", triggers: [cron("*/15 * * * *")] },
+  async ({ step }) => {
     await step.run("fetch-ical", async () => {
       // Mock logic: Syncing airbnb calendar
       return "Successfully synced calendars";
@@ -11,8 +12,8 @@ export const syncAirbnbCalendar = inngest.createFunction(
 );
 
 export const checkKPLCTokens = inngest.createFunction(
-  { id: "check-kplc-tokens", cron: "0 */4 * * *" } as any,
-  async ({ step }: { step: any }) => {
+  { id: "check-kplc-tokens", triggers: [cron("0 */4 * * *")] },
+  async ({ step }) => {
     await step.run("query-kplc-balances", async () => {
       // Mock logic: Checking KPLC tokens
       return "Tokens checked. All units above 20 tokens.";
@@ -21,8 +22,8 @@ export const checkKPLCTokens = inngest.createFunction(
 );
 
 export const handleBookingConfirmed = inngest.createFunction(
-  { id: "handle-booking-confirmed", event: "booking/confirmed" } as any,
-  async ({ event, step }: { event: any; step: any }) => {
+  { id: "handle-booking-confirmed", triggers: [eventType("booking/confirmed")] },
+  async ({ event, step }) => {
     const lockCode = await step.run("generate-ttlock", async () => {
       return "123456";
     });

@@ -60,12 +60,14 @@ export async function getBookingsAction() {
   }));
 }
 
-export async function updateBookingStatusAction(id: number, status: string) {
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
+
+export async function updateBookingStatusAction(id: number, status: BookingStatus) {
   const { orgId } = await getAuthContext();
 
   // Verification step needed: Ensure booking belongs to org's property (Implicitly done by orgId trust for now)
   await db.update(bookings)
-    .set({ status: status as any, updatedAt: new Date() })
+    .set({ status, updatedAt: new Date() })
     .where(eq(bookings.id, id));
 
   return { success: true };

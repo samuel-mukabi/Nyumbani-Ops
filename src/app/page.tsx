@@ -10,14 +10,12 @@ import Footer from '@/components/landing/Footer';
 const Page = () => {
     return (
         <main className="min-h-screen bg-background flex flex-col">
-            <div className="flex flex-col min-h-dvh">
-                <Navbar />
-                <Hero />
-            </div>
-            <Features />
-            <EditorialQuote />
-            <CTA />
-            <Footer />
+            <Navbar/>
+            <Hero/>
+            <Features/>
+            <EditorialQuote/>
+            <CTA/>
+            <Footer/>
         </main>
     );
 };

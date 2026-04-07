@@ -14,8 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateTeamMemberAction, deleteTeamMemberAction } from "@/lib/actions/staff";
+import { users } from "@/db/schema";
+export type TeamMember = typeof users.$inferSelect;
 
-export default function EditTeamMemberDialog({ member }: { member: any }) {
+export default function EditTeamMemberDialog({ member }: { member: TeamMember }) {
   const [open, setOpen] = useState(false);
 
   async function handleSubmit(formData: FormData) {

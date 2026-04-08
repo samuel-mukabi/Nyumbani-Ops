@@ -59,7 +59,7 @@ export default async function CompliancePage({
             <label htmlFor="month" className="text-xs uppercase tracking-widest text-on-surface-variant">
               Reporting Month
             </label>
-            <Input id="month" name="month" type="month" defaultValue={monthKey} className="w-[180px]" />
+            <Input id="month" name="month" type="month" defaultValue={monthKey} className="w-45" />
           </div>
           <div className="space-y-1">
             <label htmlFor="propertyId" className="text-xs uppercase tracking-widest text-on-surface-variant">
@@ -69,7 +69,7 @@ export default async function CompliancePage({
               id="propertyId"
               name="propertyId"
               defaultValue={propertyId ?? ""}
-              className="h-10 w-[220px] rounded-md border border-input bg-background px-3 text-sm"
+              className="h-10 w-55 rounded-md border border-input bg-background px-3 text-sm"
             >
               <option value="">All properties</option>
               {filterOptions.properties.map((property) => (
@@ -87,7 +87,7 @@ export default async function CompliancePage({
               id="unitId"
               name="unitId"
               defaultValue={unitId ?? ""}
-              className="h-10 w-[220px] rounded-md border border-input bg-background px-3 text-sm"
+              className="h-10 w-55 rounded-md border border-input bg-background px-3 text-sm"
             >
               <option value="">All units</option>
               {filterOptions.units.map((unit) => (
@@ -211,7 +211,7 @@ export default async function CompliancePage({
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold tracking-tight">eTIMS Expense Queue</h2>
         <div className="overflow-x-auto border-y border-outline-variant/15">
-          <table className="w-full text-sm min-w-[900px]">
+          <table className="w-full text-sm min-w-225">
             <thead>
               <tr className="border-b border-outline-variant/10">
                 <th className="px-2 py-3 text-left">Date</th>

@@ -301,6 +301,10 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
     fields: [bookings.propertyId],
     references: [properties.id],
   }),
+  unit: one(units, {
+    fields: [bookings.unitId],
+    references: [units.id],
+  }),
 }));
 
 export const tasksRelations = relations(tasks, ({ one }) => ({

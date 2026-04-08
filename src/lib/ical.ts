@@ -18,10 +18,10 @@ export async function syncPropertyIcal(propertyId: number, url: string) {
       if (!event || event.type !== "VEVENT") continue;
       const vevent = event as ical.VEvent;
 
-      const externalId = typeof vevent.uid === "string" ? vevent.uid : (vevent.uid as any)?.val;
+      const externalId = typeof vevent.uid === "string" ? vevent.uid : (vevent.uid as { val: string })?.val;
       const checkInDate = vevent.start;
       const checkOutDate = vevent.end;
-      const summary = typeof vevent.summary === "string" ? vevent.summary : (vevent.summary as any)?.val || "Reserved";
+      const summary = typeof vevent.summary === "string" ? vevent.summary : (vevent.summary as { val: string })?.val || "Reserved";
 
       if (!externalId || !checkInDate || !checkOutDate) {
         syncResults.errors++;

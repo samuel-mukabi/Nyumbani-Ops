@@ -1,11 +1,10 @@
-import Link from "next/link";
-import { LayoutDashboard, Building2, Users, FileCheck, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { users, organizations, properties } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { DashboardShell } from "@/components/layout/DashboardShell";
+import React from "react";
 
 export default async function DashboardLayout({
   children,

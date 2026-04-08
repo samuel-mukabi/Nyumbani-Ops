@@ -4,7 +4,21 @@
  * defined by the KRA OSCU specifications.
  */
 
-export function generateSalesInvoicePayload(bookingData: any) {
+interface BookingData {
+  externalId?: string | null;
+  guestPhone?: string | null;
+  guestName?: string | null;
+  grossAmount?: number | null;
+}
+
+interface ExpenseData {
+  id?: number | null;
+  vendorName?: string | null;
+  amount?: number | null;
+  category?: string | null;
+}
+
+export function generateSalesInvoicePayload(bookingData: BookingData) {
   // Mapping a booking or monthly statement to an official sales invoice struct
   return {
     trdInvcNo: bookingData.externalId || `INV-${Date.now()}`,
@@ -24,7 +38,7 @@ export function generateSalesInvoicePayload(bookingData: any) {
   };
 }
 
-export function generatePurchaseInvoicePayload(expenseData: any) {
+export function generatePurchaseInvoicePayload(expenseData: ExpenseData) {
   // Mapping compliance_expense record
   return {
     purcNo: expenseData.id?.toString() || `PUR-${Date.now()}`,

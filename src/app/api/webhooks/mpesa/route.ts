@@ -14,8 +14,12 @@ export async function POST(req: Request) {
     if (body && body.ResultCode === 0) {
       // Payment Successful
       const checkoutRequestId = body.CheckoutRequestID;
-      const callbackMetadata = body.CallbackMetadata?.Item || [];
-      const mpesaReceiptObj = callbackMetadata.find((item: any) => item.Name === 'MpesaReceiptNumber');
+      interface MpesaMetadataItem {
+        Name: string;
+        Value?: string | number;
+      }
+      const callbackMetadata = (body.CallbackMetadata?.Item || []) as MpesaMetadataItem[];
+      const mpesaReceiptObj = callbackMetadata.find((item) => item.Name === 'MpesaReceiptNumber');
       const receiptNumber = mpesaReceiptObj ? mpesaReceiptObj.Value : \`SIM-MPESA-\${Date.now()}\`;
       
       // Update booking status in DB to CONFIRMED

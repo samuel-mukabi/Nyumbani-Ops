@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Building2, Users, FileCheck, HandCoins, ReceiptText, Zap, Globe, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Building2, Users, FileCheck, HandCoins, ReceiptText, Zap, CalendarDays } from "lucide-react";
 
 export function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
@@ -10,9 +10,8 @@ export function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
   const links = [
     { name: "Control Panel", href: "/dashboard", icon: LayoutDashboard },
     { name: "Properties", href: "/properties", icon: Building2 },
-    { name: "Storefront", href: "/demo/book", icon: Globe },
     { name: "Owners", href: "/owners", icon: HandCoins },
-    { name: "Reservations", href: "/reservations/new", icon: CalendarDays },
+    { name: "Reservations", href: "/reservations", icon: CalendarDays },
     { name: "Statements", href: "/statements", icon: ReceiptText },
     { name: "Team", href: "/staff", icon: Users },
     { name: "Taxes", href: "/compliance", icon: FileCheck },

@@ -23,7 +23,7 @@ export default async function DashboardPage() {
       {/* Editorial Header */}
       <section className="space-y-4">
         <div className="flex items-center gap-3">
-          <span className="w-8 h-[1px] bg-primary/40 block" />
+          <span className="w-8 h-px bg-primary/40 block" />
           <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">Live Overview</span>
         </div>
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{activeStays}</span>
             <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Properties</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Guests currently checked into your properties.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Guests currently checked into your properties.</p>
         </div>
 
         <div className="space-y-6 group cursor-default">
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{pendingCleanings}</span>
             <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Pending</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Cleaning jobs waiting to be confirmed.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Cleaning jobs waiting to be confirmed.</p>
         </div>
 
         <div className="space-y-6 group cursor-default">
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{kplcOverview.critical}</span>
             <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Critical</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[220px]">
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-55">
             {kplcOverview.low} low, {kplcOverview.healthy} healthy out of {kplcOverview.totalMeteredUnits} metered units.
           </p>
           <form action={syncKplcNowAction}>
@@ -86,7 +86,7 @@ export default async function DashboardPage() {
           <div className="flex items-baseline gap-4">
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">A+</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Tax receipt status for this billing period.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Tax receipt status for this billing period.</p>
         </div>
       </section>
 
@@ -142,7 +142,7 @@ export default async function DashboardPage() {
       {/* Narrative Footer */}
       <footer className="pt-24 opacity-20 hover:opacity-100 transition-opacity duration-1000">
          <div className="flex flex-col items-center gap-6">
-            <div className="w-[1px] h-24 bg-gradient-to-b from-primary to-transparent" />
+            <div className="w-px h-24 bg-linear-to-b from-primary to-transparent" />
             <p className="text-[10px] font-bold tracking-[0.4em] text-on-surface-variant uppercase">Elegance in Automation</p>
          </div>
       </footer>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { ArrowRight, Building2, MapPin } from "lucide-react";
+import { ArrowRight, Building2, MapPin, Plus, Trash2 } from "lucide-react";
 import { submitOnboardingAction } from "@/lib/actions/onboarding";
 import { useFormStatus } from "react-dom";
 import { FadeIn } from "@/components/landing/FadeIn";
@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-function SubmitButton() {
+function SubmitButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
     <Button 
       type="submit" 
-      disabled={pending}
+      disabled={pending || disabled}
       className="h-14 w-full rounded-xl font-bold flex items-center justify-center gap-3 shadow-xl shadow-primary/10 transition-all"
     >
       {pending ? "Setting up..." : "Complete Setup"}
@@ -28,6 +28,40 @@ function SubmitButton() {
 export default function OnboardingPage() {
   const [step, setStep] = useState<1 | 2>(1);
   const [orgName, setOrgName] = useState("");
+  const [properties, setProperties] = useState([
+    { name: "", address: "", unitCount: 1 },
+  ]);
+
+  const canContinueToProperties = orgName.trim().length > 0;
+  const hasValidProperties = properties.every(
+    (property) =>
+      property.name.trim().length > 0 &&
+      property.unitCount >= 1 &&
+      Number.isInteger(property.unitCount)
+  );
+
+  function updateProperty(
+    index: number,
+    field: "name" | "address" | "unitCount",
+    value: string | number
+  ) {
+    setProperties((prev) =>
+      prev.map((property, i) =>
+        i === index ? { ...property, [field]: value } : property
+      )
+    );
+  }
+
+  function addProperty() {
+    setProperties((prev) => [...prev, { name: "", address: "", unitCount: 1 }]);
+  }
+
+  function removeProperty(index: number) {
+    setProperties((prev) => {
+      if (prev.length === 1) return prev;
+      return prev.filter((_, i) => i !== index);
+    });
+  }
 
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-background selection:bg-primary/20">
@@ -115,47 +149,115 @@ export default function OnboardingPage() {
                     <Button 
                         type="button" 
                         onClick={() => {
-                          if (orgName.trim().length > 0) setStep(2);
+                          if (canContinueToProperties) setStep(2);
                         }}
+                        disabled={!canContinueToProperties}
                         className="h-14 w-full rounded-xl font-bold flex gap-3 shadow-xl shadow-primary/10"
                     >
-                        Continue to Unit Setup
+                        Continue to Property Setup
                         <ArrowRight className="w-4 h-4" />
                     </Button>
                 </div>
 
-                {/* Step 2: Property */}
+                {/* Step 2: Properties */}
                 <div className={`absolute top-0 left-0 w-full space-y-6 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${step === 2 ? 'opacity-100 translate-x-0 z-10' : 'opacity-0 translate-x-12 pointer-events-none z-0'}`}>
-                    <div className="space-y-4">
-                        <div className="space-y-2 text-left">
-                            <Label htmlFor="propertyName" className="text-foreground">Property Name</Label>
-                            <div className="relative">
+                    <input
+                        type="hidden"
+                        name="propertiesPayload"
+                        value={JSON.stringify(properties)}
+                    />
+                    <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+                        {properties.map((property, index) => (
+                          <div key={index} className="space-y-4 rounded-xl border border-surface-dim p-4">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-semibold text-foreground">
+                                Property {index + 1}
+                              </p>
+                              {properties.length > 1 ? (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => removeProperty(index)}
+                                  className="h-8 w-8 text-on-surface-variant hover:text-destructive"
+                                  aria-label={`Remove property ${index + 1}`}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              ) : null}
+                            </div>
+
+                            <div className="space-y-2 text-left">
+                              <Label htmlFor={`propertyName-${index}`} className="text-foreground">
+                                Property Name
+                              </Label>
+                              <div className="relative">
                                 <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/50" />
-                                <Input 
-                                    id="propertyName"
-                                    name="propertyName"
-                                    type="text" 
-                                    placeholder="e.g. The Sapphire Penthouse"
-                                    required={step === 2}
-                                    className="h-14 rounded-xl bg-transparent border-surface-dim pl-11 focus-visible:ring-primary"
+                                <Input
+                                  id={`propertyName-${index}`}
+                                  type="text"
+                                  placeholder="e.g. The Sapphire Penthouse"
+                                  required={step === 2}
+                                  value={property.name}
+                                  onChange={(e) => updateProperty(index, "name", e.target.value)}
+                                  className="h-14 rounded-xl bg-transparent border-surface-dim pl-11 focus-visible:ring-primary"
                                 />
+                              </div>
                             </div>
-                        </div>
-                        <div className="space-y-2 text-left">
-                            <Label htmlFor="propertyAddress" className="text-foreground">Location</Label>
-                            <div className="relative">
+
+                            <div className="space-y-2 text-left">
+                              <Label htmlFor={`propertyAddress-${index}`} className="text-foreground">
+                                Location
+                              </Label>
+                              <div className="relative">
                                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/50" />
-                                <Input 
-                                    id="propertyAddress"
-                                    name="propertyAddress"
-                                    type="text" 
-                                    placeholder="e.g. Westlands, Nairobi"
-                                    required={step === 2}
-                                    className="h-14 rounded-xl bg-transparent border-surface-dim pl-11 focus-visible:ring-primary"
+                                <Input
+                                  id={`propertyAddress-${index}`}
+                                  type="text"
+                                  placeholder="e.g. Westlands, Nairobi"
+                                  value={property.address}
+                                  onChange={(e) => updateProperty(index, "address", e.target.value)}
+                                  className="h-14 rounded-xl bg-transparent border-surface-dim pl-11 focus-visible:ring-primary"
                                 />
+                              </div>
                             </div>
-                        </div>
+
+                            <div className="space-y-2 text-left">
+                              <Label htmlFor={`unitCount-${index}`} className="text-foreground">
+                                Number of Units
+                              </Label>
+                              <Input
+                                id={`unitCount-${index}`}
+                                type="number"
+                                min={1}
+                                step={1}
+                                required={step === 2}
+                                value={property.unitCount}
+                                onChange={(e) =>
+                                  updateProperty(
+                                    index,
+                                    "unitCount",
+                                    Number.isNaN(e.target.valueAsNumber)
+                                      ? 1
+                                      : Math.max(1, Math.floor(e.target.valueAsNumber))
+                                  )
+                                }
+                                className="h-14 rounded-xl bg-transparent border-surface-dim focus-visible:ring-primary"
+                              />
+                            </div>
+                          </div>
+                        ))}
                     </div>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={addProperty}
+                      className="h-12 w-full rounded-xl border-surface-dim bg-transparent"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Another Property
+                    </Button>
                     
                     <div className="pt-2 flex gap-3">
                         <Button 
@@ -167,9 +269,14 @@ export default function OnboardingPage() {
                             Back
                         </Button>
                         <div className="flex-1">
-                            <SubmitButton />
+                            <SubmitButton disabled={!hasValidProperties} />
                         </div>
                     </div>
+                    {!hasValidProperties && (
+                      <p className="text-xs text-destructive">
+                        Add at least one valid property name and unit count (minimum 1) for each property.
+                      </p>
+                    )}
                 </div>
             </form>
 

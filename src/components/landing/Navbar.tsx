@@ -44,7 +44,7 @@ const Navbar = () => {
     const navContent = (
         <nav className="container mx-auto px-6 h-20 flex items-center">
             <div className="flex-1 flex justify-start">
-                <Link href='/' className="text-primary font-bold text-2xl hover:text-primary/80 transition-colors">Nyumbani-Ops</Link>
+                <Link href='/' className="text-primary font-bold text-2xl hover:text-primary transition-colors">Nyumbani-Ops</Link>
             </div>
             <div className="hidden md:flex items-center space-x-10">
                 {links.map((link, index) => {

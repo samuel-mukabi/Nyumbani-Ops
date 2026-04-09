@@ -72,3 +72,30 @@ export async function updateBookingStatusAction(id: number, status: BookingStatu
 
   return { success: true };
 }
+
+export async function getUnitBookingsAction(unitId: number) {
+  const { orgId } = await getAuthContext();
+
+  const rows = await db.select({
+    id: bookings.id,
+    checkInDate: bookings.checkInDate,
+    checkOutDate: bookings.checkOutDate,
+    status: bookings.status,
+  })
+    .from(bookings)
+    .where(
+      and(
+        eq(bookings.organizationId, orgId),
+        eq(bookings.unitId, unitId)
+      )
+    );
+
+  // Filter out cancelled bookings and return simplified range objects
+  return rows
+    .filter(row => row.status !== 'CANCELLED')
+    .map(row => ({
+      id: row.id,
+      start: row.checkInDate,
+      end: row.checkOutDate,
+    }));
+}

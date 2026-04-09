@@ -146,7 +146,7 @@ export default function SignUpPage() {
       <section className="hidden lg:flex flex-col justify-between p-16 bg-surface-container-low border-r border-surface-dim relative overflow-hidden">
         
         {/* Logo / Branding */}
-        <Link href="/" className="text-primary font-bold text-2xl z-10 hover:text-primary/80 transition-colors">
+        <Link href="/" className="text-primary font-bold text-2xl z-10 hover:text-primary transition-colors">
             Nyumbani-Ops
         </Link>
 
@@ -164,7 +164,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Footer info or link */}
-        <div className="z-10 text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
+        <div className="z-10 text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant">
             NYUMBANI_OPS • NEW ACCOUNT
         </div>
 
@@ -325,7 +325,7 @@ export default function SignUpPage() {
             <div className="mt-8 flex flex-col items-center gap-4">
                 <p className="text-on-surface-variant text-sm">
                     Already have an account? 
-                    <Link href="/sign-in" className="text-primary font-bold ml-2 hover:text-primary/80 transition-colors">
+                    <Link href="/sign-in" className="text-primary font-bold ml-2 hover:text-primary transition-colors">
                         Sign In
                     </Link>
                 </p>

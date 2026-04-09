@@ -24,7 +24,7 @@ type OwnerOption = {
 type UnitRow = {
   id: number;
   ownerId: number | null;
-  unitCode: string;
+  unitCode: string | null;
   name: string;
   listingUrl: string | null;
   status: string;
@@ -37,6 +37,7 @@ type PropertyRow = {
   address: string | null;
   area: string | null;
   units: UnitRow[];
+  [key: string]: any;
 };
 
 function EditUnitDialog({ unit, owners }: { unit: UnitRow; owners: OwnerOption[] }) {
@@ -70,11 +71,7 @@ function EditUnitDialog({ unit, owners }: { unit: UnitRow; owners: OwnerOption[]
         <form action={handleSubmit} className="space-y-4 py-3">
           <input type="hidden" name="id" value={unit.id} />
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor={`unitCode-${unit.id}`}>Unit Code</Label>
-              <Input id={`unitCode-${unit.id}`} name="unitCode" defaultValue={unit.unitCode} required />
-            </div>
+          <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <Label htmlFor={`status-${unit.id}`}>Status</Label>
               <select
@@ -193,7 +190,6 @@ export default function PropertiesUnitsList({
                       <table className="w-full min-w-[860px] text-sm">
                         <thead>
                           <tr className="border-y border-outline-variant/10 text-on-surface-variant">
-                            <th className="px-2 py-3 text-left font-semibold">Unit Code</th>
                             <th className="px-2 py-3 text-left font-semibold">Unit Name</th>
                             <th className="px-2 py-3 text-left font-semibold">Owner</th>
                             <th className="px-2 py-3 text-left font-semibold">Status</th>
@@ -204,7 +200,6 @@ export default function PropertiesUnitsList({
                         <tbody>
                           {property.units.map((unit) => (
                             <tr key={unit.id} className="border-b border-outline-variant/10">
-                              <td className="px-2 py-4 font-mono">{unit.unitCode}</td>
                               <td className="px-2 py-4">{unit.name}</td>
                               <td className="px-2 py-4 text-on-surface-variant">{unit.ownerName}</td>
                               <td className="px-2 py-4 capitalize text-on-surface-variant">{unit.status}</td>

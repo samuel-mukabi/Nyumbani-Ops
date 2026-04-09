@@ -70,7 +70,7 @@ export default function OnboardingPage() {
       <section className="hidden lg:flex flex-col justify-between p-16 bg-surface-container-low border-r border-surface-dim relative overflow-hidden">
         
         {/* Logo / Branding */}
-        <Link href="/" className="text-primary font-bold text-2xl z-10 hover:text-primary/80 transition-colors">
+        <Link href="/" className="text-primary font-bold text-2xl z-10 hover:text-primary transition-colors">
             Nyumbani-Ops
         </Link>
 
@@ -93,7 +93,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Footer info */}
-        <div className="z-10 text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant/40 flex items-center gap-4">
+        <div className="z-10 text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant flex items-center gap-4">
             NYUMBANI_OPS • SETUP
             <div className="flex gap-1.5 ml-4">
                 <div className={`w-8 h-1 rounded-full transition-colors ${step === 1 ? 'bg-primary' : 'bg-outline-variant/20'}`} />
@@ -192,7 +192,7 @@ export default function OnboardingPage() {
                                 Property Name
                               </Label>
                               <div className="relative">
-                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/50" />
+                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                                 <Input
                                   id={`propertyName-${index}`}
                                   type="text"
@@ -210,7 +210,7 @@ export default function OnboardingPage() {
                                 Location
                               </Label>
                               <div className="relative">
-                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/50" />
+                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                                 <Input
                                   id={`propertyAddress-${index}`}
                                   type="text"
@@ -281,7 +281,7 @@ export default function OnboardingPage() {
             </form>
 
             {/* Support/Info info footer */}
-            <div className="mt-12 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/30 flex items-center gap-2">
+            <div className="mt-12 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-current" />
                 Your data is stored securely.
             </div>

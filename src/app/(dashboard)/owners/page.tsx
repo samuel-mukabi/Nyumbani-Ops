@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createOwnerAction, createUnitAction, generateOwnerStatementAction, getOwnersOverviewAction } from "@/lib/actions/owners";
+import { getPropertiesAction } from "@/lib/actions/properties";
 
 function getCurrentMonthDate() {
   const now = new Date();
@@ -20,6 +21,7 @@ function formatKes(value: number) {
 
 export default async function OwnersPage() {
   const owners = await getOwnersOverviewAction();
+  const properties = await getPropertiesAction();
   const statementMonth = getCurrentMonthDate();
 
   return (
@@ -79,19 +81,26 @@ export default async function OwnersPage() {
                 ))}
               </select>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="unitCode">Unit Code</Label>
-                <Input id="unitCode" name="unitCode" required placeholder="3A" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="unitName">Unit Name</Label>
-                <Input id="unitName" name="unitName" required placeholder="Sunset Apt 3A" />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="unitName">Unit Name</Label>
+              <Input id="unitName" name="unitName" required placeholder="Sunset Apt 3A" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="buildingName">Building</Label>
-              <Input id="buildingName" name="buildingName" required placeholder="Sunset Apartments, Kilimani" />
+              <Label htmlFor="buildingName">Property / Building</Label>
+              <select
+                id="buildingName"
+                name="buildingName"
+                required
+                className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                defaultValue=""
+              >
+                <option value="" disabled>Select property</option>
+                {properties.map((p) => (
+                  <option key={p.id} value={p.name}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">

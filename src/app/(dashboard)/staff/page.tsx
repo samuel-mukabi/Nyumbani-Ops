@@ -1,4 +1,3 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Users as UsersIcon } from "lucide-react";
 import AddTeamMemberDialog from "@/components/staff/AddTeamMemberDialog";
 import EditTeamMemberDialog from "@/components/staff/EditTeamMemberDialog";
@@ -57,46 +56,46 @@ export default async function StaffPage() {
             </span>
         </div>
 
-        <div className="overflow-x-auto bg-surface-container-lowest rounded-2xl border border-outline-variant/20 shadow-sm">
-          <Table>
-            <TableHeader className="bg-surface-container-low/50">
-              <TableRow className="border-b border-outline-variant/20 hover:bg-transparent">
-                <TableHead className="py-5 font-semibold text-on-surface">Name</TableHead>
-                <TableHead className="py-5 font-semibold text-on-surface">Role</TableHead>
-                <TableHead className="py-5 font-semibold text-on-surface">Phone Number</TableHead>
-                <TableHead className="py-5 font-semibold text-on-surface">Email</TableHead>
-                <TableHead className="text-right py-5 font-semibold text-on-surface">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <div className="overflow-x-auto border-y border-outline-variant/20">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-outline-variant/20">
+                <th className="py-5 text-left font-semibold text-on-surface">Name</th>
+                <th className="py-5 text-left font-semibold text-on-surface">Role</th>
+                <th className="py-5 text-left font-semibold text-on-surface">Phone Number</th>
+                <th className="py-5 text-left font-semibold text-on-surface">Email</th>
+                <th className="text-right py-5 font-semibold text-on-surface">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               {teamMembers.length === 0 ? (
-                <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={5} className="text-center py-16">
+                <tr>
+                  <td colSpan={5} className="text-center py-16">
                     <p className="text-on-surface-variant mb-2">No team members found.</p>
                     <p className="text-sm font-light italic">Add your first member to start managing.</p>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ) : (
                   teamMembers.map((member) => (
-                    <TableRow key={member.id} className="border-b border-outline-variant/10 hover:bg-surface-container-low/30 transition-colors">
-                      <TableCell className="py-5 font-medium text-foreground">
+                    <tr key={member.id} className="border-b border-outline-variant/10 hover:bg-surface-container-low/20 transition-colors">
+                      <td className="py-5 font-medium text-foreground">
                         {member.firstName || member.email?.split('@')[0]} {member.lastName || ''}
-                      </TableCell>
-                      <TableCell className="py-5">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
+                      </td>
+                      <td className="py-5">
+                          <span className="inline-flex items-center text-[10px] font-bold uppercase tracking-widest text-primary">
                               {member.role}
                           </span>
-                      </TableCell>
-                      <TableCell className="py-5 text-on-surface-variant">{member.phoneNumber || "—"}</TableCell>
-                      <TableCell className="py-5 text-sm text-on-surface-variant">{member.email || "—"}</TableCell>
-                      <TableCell className="py-5 text-right w-32 whitespace-nowrap">
+                      </td>
+                      <td className="py-5 text-on-surface-variant">{member.phoneNumber || "—"}</td>
+                      <td className="py-5 text-sm text-on-surface-variant">{member.email || "—"}</td>
+                      <td className="py-5 text-right w-32 whitespace-nowrap">
                         <EditTeamMemberDialog member={member} />
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

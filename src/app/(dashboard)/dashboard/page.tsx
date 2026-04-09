@@ -1,13 +1,21 @@
 import { getPropertiesAction } from "@/lib/actions/properties";
 import { getBookingsAction } from "@/lib/actions/bookings";
+import { getComplianceSummaryWithFiltersAction } from "@/lib/actions/compliance";
+import { getKplcOverviewAction, syncKplcNowAction } from "@/lib/actions/kplc";
 import Link from "next/link";
 
 export default async function DashboardPage() {
   const properties = await getPropertiesAction();
   const bookings = await getBookingsAction();
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const compliance = await getComplianceSummaryWithFiltersAction({ monthKey });
+  const kplcOverview = await getKplcOverviewAction();
 
   const activeStays = bookings.filter(b => b.status === "CHECKED_IN").length;
   const pendingCleanings = bookings.filter(b => b.status === "CHECKED_OUT").length;
+  const complianceRisk =
+    compliance.status !== "closed" || compliance.missingEtimsCount > 0;
 
   return (
     <div className="space-y-24 animate-in fade-in duration-1000">
@@ -15,7 +23,7 @@ export default async function DashboardPage() {
       {/* Editorial Header */}
       <section className="space-y-4">
         <div className="flex items-center gap-3">
-          <span className="w-8 h-[1px] bg-primary/40 block" />
+          <span className="w-8 h-px bg-primary/40 block" />
           <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">Live Overview</span>
         </div>
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
@@ -23,8 +31,16 @@ export default async function DashboardPage() {
             Your <span className="font-medium text-primary">Overview.</span>
           </h1>
           <div className="flex flex-col items-start lg:items-end gap-1">
-             <p className="text-sm font-medium text-on-surface-variant italic font-serif">"The art of hospitality is invisible management."</p>
+             <p className="text-sm font-medium text-on-surface-variant italic font-serif">&quot;The art of hospitality is invisible management.&quot;</p>
              <p className="text-[10px] font-bold tracking-widest text-on-surface-variant/40 uppercase">Nairobi Time • {new Date().toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}</p>
+             <p className="text-xs font-semibold text-primary uppercase tracking-wider">Agency Overview</p>
+             <p
+               className={`text-[10px] font-bold uppercase tracking-widest ${
+                 complianceRisk ? "text-amber-600" : "text-emerald-600"
+               }`}
+             >
+               Compliance {complianceRisk ? "Attention Needed" : "Healthy"}
+             </p>
           </div>
         </div>
       </section>
@@ -37,7 +53,7 @@ export default async function DashboardPage() {
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{activeStays}</span>
             <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Properties</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Guests currently checked into your properties.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Guests currently checked into your properties.</p>
         </div>
 
         <div className="space-y-6 group cursor-default">
@@ -46,16 +62,23 @@ export default async function DashboardPage() {
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{pendingCleanings}</span>
             <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Pending</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Cleaning jobs waiting to be confirmed.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Cleaning jobs waiting to be confirmed.</p>
         </div>
 
         <div className="space-y-6 group cursor-default">
           <p className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase group-hover:text-primary transition-colors">Power & Locks</p>
           <div className="flex items-baseline gap-4">
-            <span className="text-7xl font-light text-on-surface leading-none tabular-nums">100</span>
-            <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">%</span>
+            <span className="text-7xl font-light text-on-surface leading-none tabular-nums">{kplcOverview.critical}</span>
+            <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">Critical</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Power meter and smart lock connection status.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-55">
+            {kplcOverview.low} low, {kplcOverview.healthy} healthy out of {kplcOverview.totalMeteredUnits} metered units.
+          </p>
+          <form action={syncKplcNowAction}>
+            <button type="submit" className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline">
+              Refresh KPLC readings
+            </button>
+          </form>
         </div>
 
         <div className="space-y-6 group cursor-default">
@@ -63,7 +86,7 @@ export default async function DashboardPage() {
           <div className="flex items-baseline gap-4">
             <span className="text-7xl font-light text-on-surface leading-none tabular-nums">A+</span>
           </div>
-          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-[200px]">Tax receipt status for this billing period.</p>
+          <p className="text-xs leading-relaxed text-on-surface-variant/70 max-w-50">Tax receipt status for this billing period.</p>
         </div>
       </section>
 
@@ -77,7 +100,7 @@ export default async function DashboardPage() {
         <div className="space-y-1">
           {properties.length === 0 ? (
             <div className="py-24 text-center">
-              <p className="text-lg font-light text-on-surface-variant italic font-serif">"A quiet portfolio is an unmapped one."</p>
+              <p className="text-lg font-light text-on-surface-variant italic font-serif">&quot;A quiet portfolio is an unmapped one.&quot;</p>
               <p className="text-[10px] font-bold tracking-widest text-primary uppercase mt-4">Add Your First Property</p>
             </div>
           ) : (
@@ -119,7 +142,7 @@ export default async function DashboardPage() {
       {/* Narrative Footer */}
       <footer className="pt-24 opacity-20 hover:opacity-100 transition-opacity duration-1000">
          <div className="flex flex-col items-center gap-6">
-            <div className="w-[1px] h-24 bg-gradient-to-b from-primary to-transparent" />
+            <div className="w-px h-24 bg-linear-to-b from-primary to-transparent" />
             <p className="text-[10px] font-bold tracking-[0.4em] text-on-surface-variant uppercase">Elegance in Automation</p>
          </div>
       </footer>

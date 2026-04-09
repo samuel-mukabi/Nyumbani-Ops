@@ -36,7 +36,7 @@ export default function AddPropertyDialog() {
         <DialogHeader>
           <DialogTitle>Add New Property</DialogTitle>
           <DialogDescription>
-            Enter the details for your new listing. These will be used for guest portals and automation.
+            Capture building profile details used for owner reporting, operations, and guest support.
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4 py-4">
@@ -49,10 +49,26 @@ export default function AddPropertyDialog() {
             <Label htmlFor="address">Location / Address</Label>
             <Input id="address" name="address" placeholder="e.g. Westlands, Nairobi" />
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="area">Area</Label>
+              <Input id="area" name="area" placeholder="e.g. Kilimani" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="securityContact">Security Contact</Label>
+              <Input id="securityContact" name="securityContact" placeholder="07..." />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="sharedWifiRouterId">Shared Wi-Fi Router ID</Label>
+            <Input id="sharedWifiRouterId" name="sharedWifiRouterId" placeholder="Router serial / asset ID" />
+          </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="kplcMeterNumber">KPLC Meter</Label>
+              <Label htmlFor="kplcMeterNumber">Default KPLC Meter</Label>
               <Input id="kplcMeterNumber" name="kplcMeterNumber" placeholder="0123XXXXXXXX" />
             </div>
             <div className="space-y-2">

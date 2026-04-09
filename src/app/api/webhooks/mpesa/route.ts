@@ -14,10 +14,19 @@ export async function POST(req: Request) {
     if (body && body.ResultCode === 0) {
       // Payment Successful
       const checkoutRequestId = body.CheckoutRequestID;
+      interface MpesaMetadataItem {
+        Name: string;
+        Value?: string | number;
+      }
+      const callbackMetadata = (body.CallbackMetadata?.Item || []) as MpesaMetadataItem[];
+      const mpesaReceiptObj = callbackMetadata.find((item) => item.Name === 'MpesaReceiptNumber');
+      const receiptNumber = mpesaReceiptObj
+        ? String(mpesaReceiptObj.Value)
+        : `SIM-MPESA-${Date.now()}`;
       
       // Update booking status in DB to CONFIRMED
       const updatedBookings = await db.update(bookings)
-        .set({ status: 'CONFIRMED' })
+        .set({ status: 'CONFIRMED', mpesaReceiptNumber: receiptNumber, updatedAt: new Date() })
         .where(eq(bookings.checkoutRequestId, checkoutRequestId))
         .returning();
         

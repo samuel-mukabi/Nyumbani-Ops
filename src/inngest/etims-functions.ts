@@ -1,3 +1,4 @@
+import { eventType } from "inngest";
 import { inngest } from "./client";
 import { etimsClient } from "@/lib/etims/client";
 import { generateSalesInvoicePayload, generatePurchaseInvoicePayload } from "@/lib/etims/payload-generators";
@@ -6,8 +7,7 @@ import { etimsDocuments, complianceExpenses, bookings } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const syncEtimsReceipt = inngest.createFunction(
-  { id: "sync-etims-receipt", retries: 5 }, // 5 retries for brittle APIs
-  { event: "etims/sync_required" },
+  { id: "sync-etims-receipt", retries: 5, triggers: [eventType("etims/sync_required")] },
   async ({ event, step }) => {
     const { documentId } = event.data;
 
@@ -47,18 +47,19 @@ export const syncEtimsReceipt = inngest.createFunction(
       return { success: false, error: "Invalid document type or missing relations." };
     });
 
-    if (submitResult.success) {
+    if (submitResult.success && "data" in submitResult) {
+      const kraData = submitResult.data;
       await step.run("update-document-status", async () => {
         await db.update(etimsDocuments)
-          .set({ 
-            status: "synced", 
-            receiptNumber: submitResult.data?.rcptNo,
-            responsePayload: submitResult.data,
-            updatedAt: new Date()
+          .set({
+            status: "synced",
+            receiptNumber: kraData.rcptNo,
+            responsePayload: kraData,
+            updatedAt: new Date(),
           })
           .where(eq(etimsDocuments.id, document.id));
       });
-      return { success: true, receiptNo: submitResult.data?.rcptNo };
+      return { success: true, receiptNo: kraData.rcptNo };
     }
 
     throw new Error(`eTIMS Submission Failed`);

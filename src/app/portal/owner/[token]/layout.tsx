@@ -9,9 +9,9 @@ export default async function OwnerPortalLayout({
   params,
 }: {
   children: ReactNode;
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
-  const token = params.token;
+  const { token } = await params;
   
   // Validate token
   const ownerResult = await db.select().from(owners).where(eq(owners.secureToken, token));

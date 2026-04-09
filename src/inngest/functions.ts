@@ -2,9 +2,10 @@ import { inngest } from "./client";
 import { cron, eventType } from "inngest";
 import { syncPropertyIcal } from "@/lib/ical";
 import { db } from "@/db";
-import { properties, units } from "@/db/schema";
-import { isNotNull, sql } from "drizzle-orm";
+import { properties, units, utilityProfiles, tasks, users, bookings } from "@/db/schema";
+import { isNotNull, eq, sql } from "drizzle-orm";
 import { syncKplcForOrganization } from "@/lib/kplc/sync";
+import { darajaClient } from "@/lib/mpesa/daraja";
 
 export const syncAirbnbCalendar = inngest.createFunction(
   { id: "sync-airbnb-calendar", triggers: [cron("*/15 * * * *")] },
@@ -30,9 +31,6 @@ export const syncAirbnbCalendar = inngest.createFunction(
   }
 );
 
-import { sq } from "drizzle-orm"; // Mock import for sq if needed
-import { utilityProfiles, tasks, users } from "@/db/schema";
-import { isNotNull, eq } from "drizzle-orm";
 
 export const checkKPLCTokens = inngest.createFunction(
   { id: "check-kplc-tokens", triggers: [cron("0 */4 * * *")] },
@@ -99,9 +97,7 @@ export const processVerifiedTask = inngest.createFunction(
   }
 );
 
-import { eq } from "drizzle-orm";
-import { bookings } from "@/db/schema";
-import { darajaClient } from "@/lib/mpesa/daraja";
+
 
 export const handleBookingConfirmed = inngest.createFunction(
   { id: "handle-booking-confirmed", triggers: [eventType("booking/confirmed")] },

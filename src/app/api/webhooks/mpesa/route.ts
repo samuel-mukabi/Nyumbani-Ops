@@ -20,7 +20,9 @@ export async function POST(req: Request) {
       }
       const callbackMetadata = (body.CallbackMetadata?.Item || []) as MpesaMetadataItem[];
       const mpesaReceiptObj = callbackMetadata.find((item) => item.Name === 'MpesaReceiptNumber');
-      const receiptNumber = mpesaReceiptObj ? mpesaReceiptObj.Value : \`SIM-MPESA-\${Date.now()}\`;
+      const receiptNumber = mpesaReceiptObj
+        ? String(mpesaReceiptObj.Value)
+        : `SIM-MPESA-${Date.now()}`;
       
       // Update booking status in DB to CONFIRMED
       const updatedBookings = await db.update(bookings)

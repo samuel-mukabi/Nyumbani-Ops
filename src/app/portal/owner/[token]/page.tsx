@@ -5,10 +5,11 @@ import { eq } from "drizzle-orm";
 export default async function OwnerPortalPage({
   params,
 }: {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
-  // Fetch owner via token 
-  const ownerResult = await db.select().from(owners).where(eq(owners.secureToken, params.token));
+  const { token } = await params;
+  // Fetch owner via token
+  const ownerResult = await db.select().from(owners).where(eq(owners.secureToken, token));
   const owner = ownerResult[0];
 
   // Fetch statements and units

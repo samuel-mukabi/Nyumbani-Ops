@@ -1,116 +1,164 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { getPublicBookingDetails } from "@/lib/actions/public";
+import { notFound } from "next/navigation";
+import { Wifi, KeyRound, Lightbulb, PhoneCall, ChevronLeft, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Wifi, KeyRound, Lightbulb, UserCheck, PhoneCall } from "lucide-react";
+import Link from "next/link";
 
-export default function GuestPortalPage({ params }: { params: { "booking-id": string } }) {
-  return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto space-y-8">
-        
-        {/* Header Section */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-4">
-            <HomeIcon className="h-8 w-8 text-blue-600" />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome to Sunset Villa!</h1>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto">
-             Here is everything you need for your stay. You can access this portal at any time.
-          </p>
-        </div>
-
-        {/* Essential Info Grid */}
-        <div className="grid md:grid-cols-2 gap-4">
-          
-          <Card className="border-t-4 border-t-yellow-500 shadow-sm">
-            <CardHeader className="pb-3">
-               <CardTitle className="flex items-center text-lg">
-                 <KeyRound className="w-5 h-5 mr-2 text-yellow-500"/> Smart Lock Access
-               </CardTitle>
-            </CardHeader>
-            <CardContent>
-               <div className="bg-gray-100 rounded-md p-4 text-center">
-                 <span className="text-3xl font-mono tracking-widest font-bold text-gray-900">748291</span>
-               </div>
-               <p className="text-xs text-center text-gray-500 mt-2">Active until 10:00 AM on checkout day.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-t-4 border-t-blue-500 shadow-sm">
-             <CardHeader className="pb-3">
-               <CardTitle className="flex items-center text-lg">
-                 <Wifi className="w-5 h-5 mr-2 text-blue-500"/> Wi-Fi Details
-               </CardTitle>
-             </CardHeader>
-             <CardContent className="space-y-4">
-               <div>
-                  <p className="text-sm text-gray-500">Network Name (SSID)</p>
-                  <p className="font-semibold text-lg">Sunset_Villa_5G</p>
-               </div>
-               <div>
-                  <p className="text-sm text-gray-500">Password</p>
-                  <p className="font-mono font-medium tracking-wide">relax12345</p>
-               </div>
-             </CardContent>
-          </Card>
-
-        </div>
-
-        {/* Actions & Upsells */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-gray-900 pt-4">Stay Utilities</h3>
-          
-          <Card>
-            <CardContent className="flex flex-col sm:flex-row items-center justify-between p-6">
-              <div className="flex items-center mb-4 sm:mb-0">
-                <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mr-4">
-                  <Lightbulb className="h-6 w-6 text-orange-600" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">KPLC Power Tokens</h4>
-                  <p className="text-sm text-gray-500">Current status: Normal</p>
-                </div>
-              </div>
-              <Button variant="outline">Request Top-Up</Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="flex flex-col sm:flex-row items-center justify-between p-6">
-              <div className="flex items-center mb-4 sm:mb-0">
-                <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
-                  <PhoneCall className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Host Communication</h4>
-                  <p className="text-sm text-gray-500">WhatsApp us for direct assistance</p>
-                </div>
-              </div>
-              <Button>Message on WhatsApp</Button>
-            </CardContent>
-          </Card>
-        </div>
-
-      </div>
-    </div>
-  );
+interface PageProps {
+  params: Promise<{ "booking-id": string }>;
 }
 
-function HomeIcon(props: React.ComponentProps<"svg">) {
+export default async function GuestPortalPage({ params }: PageProps) {
+  const { "booking-id": bookingId } = await params;
+  const booking = await getPublicBookingDetails(bookingId);
+
+  if (!booking) {
+    notFound();
+  }
+
+  const { property, unit } = booking;
+
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
+    <main className="min-h-screen bg-background text-on-surface pb-24 animate-fade-in">
+      
+      {/* Editorial Header */}
+      <section className="px-6 md:px-12 pt-12 pb-20 space-y-12 border-b border-outline-variant/10">
+         <nav className="flex items-center gap-4 text-on-surface-variant">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em]">
+               Digital Concierge
+            </div>
+         </nav>
+
+         <div className="space-y-6 max-w-4xl">
+            <h1 className="font-heading text-4xl md:text-7xl tracking-tight font-light leading-none">
+               Welcome to <span className="italic font-serif">{property?.name}</span>, {booking.guestName}<span className="text-primary">.</span>
+            </h1>
+            <div className="flex flex-wrap items-center gap-6">
+               <div className="flex items-center gap-2 text-on-surface-variant font-light">
+                  <MapPin className="w-4 h-4" />
+                  <span>{property?.address || "Sanctuary Location"}</span>
+               </div>
+               <div className="w-1 h-1 rounded-full bg-outline-variant/30" />
+               <div className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                  {booking.status}
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* Zero-Card Utility Stacks */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 divide-y divide-outline-variant/10">
+         
+         {/* Access & Security */}
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 py-16 group">
+            <div className="lg:col-span-4 space-y-2">
+               <div className="flex items-center gap-3 text-primary">
+                  <KeyRound className="w-4 h-4" />
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.3em]">Entry & Access</h2>
+               </div>
+               <p className="text-sm text-on-surface-variant font-light">Secure code for your unit's smart lock.</p>
+            </div>
+            <div className="lg:col-span-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+               <div className="space-y-1">
+                  <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Active Access Code</p>
+                  <div className="flex items-baseline gap-4">
+                     <span className="text-5xl md:text-7xl font-mono font-bold tracking-tighter text-on-surface">
+                        748291
+                     </span>
+                     <span className="text-xs text-on-surface-variant font-light italic">Valid until checkout</span>
+                  </div>
+               </div>
+               <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Unit Assigned</span>
+                  <span className="text-xl font-medium">{unit?.name || "Premium Unit"}</span>
+                  <span className="text-xs text-on-surface-variant font-light">{unit?.unitCode}</span>
+               </div>
+            </div>
+         </div>
+
+         {/* Connectivity */}
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 py-16 group">
+            <div className="lg:col-span-4 space-y-2">
+               <div className="flex items-center gap-3 text-primary">
+                  <Wifi className="w-4 h-4" />
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.3em]">Connectivity</h2>
+               </div>
+               <p className="text-sm text-on-surface-variant font-light">High-speed sanctuary network.</p>
+            </div>
+            <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+               <div className="space-y-4">
+                  <div>
+                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Network SSID</p>
+                     <p className="text-2xl font-light">{property?.wifiName || "Sanctuary_5G"}</p>
+                  </div>
+                  <div className="pt-4 border-t border-outline-variant/10">
+                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Password</p>
+                     <p className="text-2xl font-mono font-medium tracking-wide">{property?.wifiPassword || "hospitality_plus"}</p>
+                  </div>
+               </div>
+               <div className="flex items-end">
+                  <div className="p-6 bg-surface-container-low rounded-2xl border border-outline-variant/20 flex-1">
+                     <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-2">Network Status</p>
+                     <p className="text-sm font-light leading-relaxed">Stable 5G Connection verified for streaming and remote work.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         {/* Utilities & Payouts */}
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 py-16 group">
+            <div className="lg:col-span-4 space-y-2">
+               <div className="flex items-center gap-3 text-primary">
+                  <Lightbulb className="w-4 h-4" />
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.3em]">Sanctuary Utilities</h2>
+               </div>
+               <p className="text-sm text-on-surface-variant font-light">KPLC Prepaid Power management.</p>
+            </div>
+            <div className="lg:col-span-8 flex flex-col md:flex-row md:items-center justify-between gap-8 py-8 bg-surface-container-low/50 px-8 rounded-3xl border border-outline-variant/5">
+               <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest italic">KPLC Prepaid Meter</p>
+                  <div className="flex items-baseline gap-4">
+                     <span className="text-4xl font-light tabular-nums">14.2<span className="text-xl ml-1 text-on-surface-variant uppercase font-bold tracking-widest">kWh</span></span>
+                     <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Heathy Balance</span>
+                  </div>
+               </div>
+               <Button variant="outline" className="h-12 px-8 rounded-xl border-outline-variant/30 text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors">
+                  Request Top-up
+               </Button>
+            </div>
+         </div>
+
+         {/* Support */}
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 py-16 group">
+            <div className="lg:col-span-4 space-y-2">
+               <div className="flex items-center gap-3 text-primary">
+                  <PhoneCall className="w-4 h-4" />
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.3em]">Personal Support</h2>
+               </div>
+               <p className="text-sm text-on-surface-variant font-light">Direct line to your sanctuary host.</p>
+            </div>
+            <div className="lg:col-span-8 flex flex-col sm:flex-row gap-4">
+               <Link href="https://wa.me/254700000000" target="_blank" className="flex-1">
+                  <Button className="w-full h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-lg shadow-emerald-600/20 font-bold tracking-widest uppercase text-[10px]">
+                     WhatsApp Support
+                  </Button>
+               </Link>
+               <Button variant="outline" className="flex-1 h-16 rounded-2xl border-outline-variant/20 font-bold tracking-widest uppercase text-[10px]">
+                  Emergency Call
+               </Button>
+            </div>
+         </div>
+
+      </section>
+
+      {/* Footer Branding */}
+      <footer className="pt-24 px-6 md:px-12 text-center">
+         <div className="flex flex-col items-center gap-4">
+            <span className="text-[10px] font-bold uppercase tracking-[0.6em] text-on-surface-variant italic">Managed with Nyumbani-Ops</span>
+            <div className="h-px w-12 bg-outline-variant/20" />
+         </div>
+      </footer>
+
+    </main>
   );
 }

@@ -406,8 +406,8 @@ export async function updateUnitAction(formData: FormData) {
   if (!id || Number.isNaN(id)) {
     throw new Error("Invalid unit id.");
   }
-  if (!unitCode || !name) {
-    throw new Error("Unit code and unit name are required.");
+  if (!name) {
+    throw new Error("Unit name is required.");
   }
   if (!["active", "inactive", "maintenance"].includes(status)) {
     throw new Error("Invalid unit status.");

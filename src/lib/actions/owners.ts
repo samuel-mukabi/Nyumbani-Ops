@@ -178,8 +178,17 @@ export async function createUnitAction(formData: FormData) {
   const listingUrl = String(formData.get("listingUrl") || "").trim();
   const kplcMeterNo = String(formData.get("kplcMeterNo") || "").trim();
 
-  if (!ownerId || !unitCode || !unitName || !buildingName) {
-    throw new Error("Owner, unit code, unit name, and building are required.");
+  if (!ownerId || !unitName || !buildingName) {
+    throw new Error("Owner, unit name, and building are required.");
+  }
+
+  // Check for duplicate unit name in the organization
+  const existingUnit = await db.query.units.findFirst({
+    where: and(eq(units.organizationId, orgId), eq(units.name, unitName)),
+  });
+
+  if (existingUnit) {
+    throw new Error(`A unit with the name "${unitName}" already exists.`);
   }
 
   const existingBuilding = await db.query.buildings.findFirst({
@@ -203,7 +212,7 @@ export async function createUnitAction(formData: FormData) {
     organizationId: orgId,
     buildingId,
     ownerId,
-    unitCode,
+    unitCode: unitCode || null,
     name: unitName,
     listingUrl: listingUrl || null,
     kplcMeterNo: kplcMeterNo || null,

@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
    Building2,
    ChevronLeft,
-   Calendar,
    DollarSign,
    Users as UsersIcon,
    Battery,
@@ -13,7 +12,6 @@ import {
    Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PropertyCalendar } from "@/components/PropertyCalendar";
 
 interface PageProps {
    params: Promise<{ slug: string }>;
@@ -43,17 +41,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
    const totalGuests = property.bookings.length;
    const activeBooking = property.bookings.find(b => b.status === "CHECKED_IN");
 
-   // Format occupied slots for the calendar
-   const occupiedSlots = property.bookings.map(booking => ({
-      from: new Date(booking.checkInDate),
-      to: new Date(booking.checkOutDate)
-   }));
-
    return (
-      <div className="space-y-16 animate-fade-in pb-24">
+      <div className="space-y-5 animate-fade-in pb-12">
 
          {/* Editorial Header */}
-         <nav className="flex items-center gap-4 text-on-surface-variant/40 hover:text-primary transition-colors">
+         <nav className="flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors">
             <Link href="/dashboard" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
                <ChevronLeft className="w-4 h-4" />
                Control Panel
@@ -63,11 +55,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
          <section className="space-y-6">
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                     <span className="w-12 h-[1px] bg-primary/40 block" />
-                     <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">Detailed Report</span>
-                  </div>
-                  <h1 className="font-heading text-6xl md:text-8xl tracking-tight text-on-surface font-light leading-none">
+                  <h1 className="font-heading text-4xl md:text-6xl tracking-tight text-on-surface font-light leading-none">
                      {property.name}<span className="text-primary italic font-serif">.</span>
                   </h1>
                   <p className="text-xl text-on-surface-variant font-light max-w-2xl leading-relaxed">
@@ -75,8 +63,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   </p>
                </div>
                <div className="flex gap-4">
-                  <Link href={`/${property.slug}`} target="_blank">
-                     <Button variant="outline" className="h-14 px-8 rounded-2xl font-bold border-outline-variant/30 text-on-surface-variant bg-transparent hover:bg-surface-container-low">
+                  <Link href={activeBooking ? `/portal/${activeBooking.id}` : `/${property.slug}`} target="_blank">
+                     <Button variant="default" className="">
                         <Share2 className="w-4 h-4 mr-2" /> View Guest Portal
                      </Button>
                   </Link>
@@ -85,7 +73,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
          </section>
 
          {/* Fairing Metrics Grid */}
-         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 border-y border-outline-variant/10 py-16">
+         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 border-y border-outline-variant/10 py-10">
             <div className="space-y-6 group cursor-default">
                <p className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase group-hover:text-primary transition-colors flex items-center gap-2">
                   <ShieldCheck className="w-3 h-3" /> Status
@@ -96,7 +84,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                      {activeBooking ? 'Occupied' : 'Vacant'}
                   </span>
                </div>
-               <p className="text-xs leading-relaxed text-on-surface-variant/70">
+               <p className="text-xs leading-relaxed text-on-surface-variant">
                   {activeBooking ? `Guest: ${activeBooking.guestName}` : 'No active guests currently.'}
                </p>
             </div>
@@ -106,12 +94,12 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   <DollarSign className="w-3 h-3" /> Total Revenue
                </p>
                <div className="flex items-baseline gap-2">
-                  <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest leading-none">KES</span>
+                  <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest leading-none">KES</span>
                   <span className="text-4xl font-light text-on-surface leading-none tabular-nums">
                      {totalRevenue.toLocaleString()}
                   </span>
                </div>
-               <p className="text-xs leading-relaxed text-on-surface-variant/70">Cumulative revenue desde registration.</p>
+               <p className="text-xs leading-relaxed text-on-surface-variant">Cumulative revenue desde registration.</p>
             </div>
 
             <div className="space-y-6 group cursor-default">
@@ -122,9 +110,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   <span className="text-4xl font-light text-on-surface leading-none tabular-nums">
                      {totalGuests}
                   </span>
-                  <span className="text-xs font-semibold text-on-surface-variant/40 uppercase tracking-widest Championship leading-none">Visits</span>
+                  <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest Championship leading-none">Visits</span>
                </div>
-               <p className="text-xs leading-relaxed text-on-surface-variant/70">Total distinct check-ins recorded.</p>
+               <p className="text-xs leading-relaxed text-on-surface-variant">Total distinct check-ins recorded.</p>
             </div>
 
             <div className="space-y-6 group cursor-default">
@@ -134,7 +122,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                <div className="flex items-baseline gap-4">
                   <span className="text-4xl font-light text-on-surface leading-none tabular-nums">Online</span>
                </div>
-               <p className="text-xs leading-relaxed text-on-surface-variant/70 flex items-center gap-2">
+               <p className="text-xs leading-relaxed text-on-surface-variant flex items-center gap-2">
                   <Wifi className="w-3 h-3" /> 5G Stable • KPLC Ready
                </p>
             </div>
@@ -145,7 +133,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                <h2 className="font-heading text-3xl font-light text-on-surface tracking-tight">
                   Property Owners & Unit Occupancy
                </h2>
-               <span className="text-[10px] font-bold tracking-widest text-on-surface-variant/40 uppercase">
+               <span className="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">
                   {occupancy?.units.length ?? 0} Units
                </span>
             </div>
@@ -162,7 +150,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   </p>
 
                   <div className="overflow-x-auto">
-                     <table className="w-full min-w-[980px] text-sm">
+                     <table className="w-full min-w-245 text-sm">
                         <thead>
                            <tr className="border-b border-outline-variant/15 text-on-surface-variant">
                               <th className="px-2 py-3 text-left font-semibold">Unit</th>
@@ -217,7 +205,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                                     )}
                                  </td>
                                  <td className="px-2 py-5">
-                                    <div className="grid grid-cols-7 gap-1 min-w-[340px]">
+                                    <div className="grid grid-cols-7 gap-1 min-w-85">
                                        {unit.weeklyTimeline.map((slot) => (
                                           <div
                                              key={`${unit.id}-${new Date(slot.date).toISOString()}`}
@@ -252,18 +240,6 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
             {/* Left: Intelligence & Availability (5/12) */}
             <div className="lg:col-span-5 space-y-14">
-               <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-3">
-                     <Calendar className="w-4 h-4 text-primary" />
-                     <h2 className="text-sm font-bold tracking-widest text-on-surface uppercase">Live Availability</h2>
-                  </div>
-                  <p className="text-xs text-on-surface-variant font-light">Real-time sync from Airbnb and Direct bookings.</p>
-               </div>
-
-               <div className="border-y border-outline-variant/10 py-8">
-                  <PropertyCalendar occupiedSlots={occupiedSlots} />
-               </div>
-
                {/* Technical Profile Grid */}
                <div className="space-y-8">
                   <div className="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
@@ -272,16 +248,16 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   </div>
                   <div className="space-y-5">
                      <div className="flex items-start justify-between gap-8 border-b border-outline-variant/10 pb-4">
-                        <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">Smart Lock</p>
+                        <p className="text-[10px] font-bold text-on-surface! uppercase tracking-widest">Smart Lock</p>
                         <p className="text-sm font-semibold font-mono text-right">{property.ttlockLockId || "DISCONNECTED"}</p>
                      </div>
                      <div className="flex items-start justify-between gap-8 border-b border-outline-variant/10 pb-4">
-                        <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">KPLC Meter</p>
+                        <p className="text-[10px] font-bold text-on-surface! uppercase tracking-widest">KPLC Meter</p>
                         <p className="text-sm font-semibold font-mono text-right">{property.kplcMeterNumber || "—"}</p>
                      </div>
                      <div className="flex items-start justify-between gap-8 border-b border-outline-variant/10 pb-4">
                         <div className="space-y-1">
-                           <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">WiFi Access</p>
+                           <p className="text-[10px] font-bold text-on-surface! uppercase tracking-widest">WiFi Access</p>
                            <p className="text-xs text-on-surface-variant">Network and support credentials</p>
                         </div>
                         <div className="flex flex-col items-end">
@@ -289,7 +265,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                               <Wifi className="w-3 h-3 text-emerald-500" />
                               {property.wifiName || "Not configured"}
                            </span>
-                           <span className="text-xs text-on-surface-variant/70 font-mono italic">{property.wifiPassword || "No password set"}</span>
+                           <span className="text-xs text-on-surface-variant font-mono italic">{property.wifiPassword || "No password set"}</span>
                         </div>
                      </div>
                   </div>
@@ -301,7 +277,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                <div className="flex items-end justify-between border-b border-outline-variant/10 pb-4">
                   <div className="space-y-1">
                      <h2 className="font-heading text-3xl font-light text-on-surface tracking-tight">House Ledger</h2>
-                     <p className="text-[10px] font-bold tracking-widest text-on-surface-variant/40 uppercase">Audit of all recent guest stays</p>
+                     <p className="text-[10px] font-bold tracking-widest text-on-surface! uppercase">Audit of all recent guest stays</p>
                   </div>
                   <span className="text-[10px] font-bold tracking-widest text-primary uppercase">
                      {property.bookings.length} Registered
@@ -311,7 +287,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                <div className="space-y-2">
                   {property.bookings.length === 0 ? (
                      <div className="py-20 text-center border-y border-dashed border-outline-variant/20">
-                        <p className="text-lg font-light text-on-surface-variant italic font-serif">"A quiet portfolio is an unmapped one."</p>
+                        <p className="text-lg font-light text-on-surface! italic font-serif">&#34;A quiet portfolio is an unmapped one.&#34;</p>
                         <p className="text-[10px] font-bold tracking-widest text-primary uppercase mt-4">Waiting for first invitation</p>
                      </div>
                   ) : (
@@ -321,23 +297,23 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                            className="group grid grid-cols-1 md:grid-cols-12 items-center gap-6 py-7 border-b border-outline-variant/10"
                         >
                            <div className="md:col-span-6 flex items-center gap-4">
-                              <div className={`w-2 h-2 rounded-full ${booking.status === 'CHECKED_IN' ? 'bg-emerald-500' : 'bg-outline-variant/30'}`} />
+                              <div className={`w-2 h-2 rounded-full ${booking.status === 'CHECKED_IN' ? 'bg-emerald-500' : 'bg-outline-variant'}`} />
                               <div className="flex flex-col min-w-0">
-                                 <span className="text-[10px] font-bold tracking-[0.2em] text-primary/40 uppercase mb-0.5">{booking.status}</span>
+                                 <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase mb-0.5">{booking.status}</span>
                                  <p className="text-xl font-medium text-on-surface tracking-tight">{booking.guestName}</p>
-                                 <p className="text-xs text-on-surface-variant/50 font-light mt-1">
+                                 <p className="text-xs text-on-surface-variant font-light mt-1">
                                     {new Date(booking.checkInDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })} &mdash; {new Date(booking.checkOutDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                                  </p>
                               </div>
                            </div>
 
                            <div className="md:col-span-3 flex flex-col md:items-end">
-                                 <span className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant/30 uppercase mb-1">Source</span>
-                                 <span className="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest">{booking.source}</span>
+                                 <span className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase mb-1">Source</span>
+                                 <span className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{booking.source}</span>
                            </div>
 
-                           <div className="md:col-span-3 flex flex-col md:items-end min-w-[100px]">
-                                 <span className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant/30 uppercase mb-1 whitespace-nowrap">Payout</span>
+                           <div className="md:col-span-3 flex flex-col md:items-end min-w-25">
+                                 <span className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase mb-1 whitespace-nowrap">Payout</span>
                                  <span className="text-lg font-semibold text-on-surface tabular-nums">KES {booking.totalAmount?.toLocaleString()}</span>
                            </div>
                         </div>
@@ -348,12 +324,12 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                <div className="pt-6 border-t border-outline-variant/10">
                   <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
                      <div className="space-y-3 max-w-xl">
-                        <p className="text-[10px] font-bold tracking-[0.4em] text-on-surface-variant/50 uppercase">House Etiquette</p>
+                        <p className="text-[10px] font-bold tracking-[0.4em] text-on-surface-variant uppercase">House Etiquette</p>
                         <p className="text-base italic font-serif leading-relaxed text-on-surface-variant">
-                           "{property.houseRules || "Standard luxury etiquette applies. Enjoy your sanctuary."}"
+                           &#34;{property.houseRules || "Standard luxury etiquette applies. Enjoy your sanctuary."}&#34;
                         </p>
                      </div>
-                     <Button variant="outline" className="h-12 px-8 rounded-xl font-bold border-outline-variant/30 text-on-surface-variant bg-transparent hover:bg-surface-container-low">
+                     <Button variant="outline">
                         Edit Profile
                      </Button>
                   </div>

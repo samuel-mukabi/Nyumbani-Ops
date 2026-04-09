@@ -84,14 +84,14 @@ const Pricing = () => {
                             <div className="flex items-center gap-6 bg-surface-container py-3 px-6 rounded-full border border-surface-dim">
                                 <button 
                                     onClick={() => setIsAnnual(false)}
-                                    className={`text-sm font-bold tracking-widest uppercase transition-colors ${!isAnnual ? 'text-primary' : 'text-on-surface-variant/40'}`}
+                                    className={`text-sm font-bold tracking-widest uppercase transition-colors ${!isAnnual ? 'text-primary' : 'text-on-surface-variant'}`}
                                 >
                                     Monthly
                                 </button>
                                 <div className="w-px h-4 bg-surface-dim" />
                                 <button 
                                     onClick={() => setIsAnnual(true)}
-                                    className={`text-sm font-bold tracking-widest uppercase transition-colors flex items-center gap-2 ${isAnnual ? 'text-primary' : 'text-on-surface-variant/40'}`}
+                                    className={`text-sm font-bold tracking-widest uppercase transition-colors flex items-center gap-2 ${isAnnual ? 'text-primary' : 'text-on-surface-variant'}`}
                                 >
                                     Yearly <span className="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full">-20%</span>
                                 </button>
@@ -138,7 +138,7 @@ const Pricing = () => {
                                                     </span>
                                                 </div>
                                                 {plan.price !== "Custom" && (
-                                                    <span className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/60 mt-4">
+                                                    <span className="text-sm font-bold uppercase tracking-widest text-on-surface-variant mt-4">
                                                         Per Month / {isAnnual ? 'Billed Yearly' : 'Billed Monthly'}
                                                     </span>
                                                 )}
@@ -158,7 +158,7 @@ const Pricing = () => {
                                         {/* Features List */}
                                         <div className="lg:col-span-5">
                                             <div className="space-y-6">
-                                                <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40 block mb-8">Service Parameters</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant block mb-8">Service Parameters</span>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
                                                     {plan.features.map((feature, fIndex) => (
                                                         <div key={fIndex} className="flex items-start gap-4 text-lg text-on-surface group/item">

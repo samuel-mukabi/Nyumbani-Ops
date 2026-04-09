@@ -121,17 +121,58 @@ export default async function CompliancePage({
       </section>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+          <div className="space-y-5">
+              <h2 className="text-2xl font-semibold tracking-tight">Add Compliance Expense</h2>
+              <form action={createComplianceExpenseAction} className="space-y-3 border-y border-outline-variant/15 py-5">
+                  <input type="hidden" name="monthKey" value={monthKey} />
+                  <select
+                      name="propertyId"
+                      defaultValue={propertyId ?? ""}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                      <option value="">Property (optional)</option>
+                      {filterOptions.properties.map((property) => (
+                          <option key={property.id} value={property.id}>
+                              {property.name}
+                          </option>
+                      ))}
+                  </select>
+                  <select
+                      name="unitId"
+                      defaultValue={unitId ?? ""}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                      <option value="">Unit (optional)</option>
+                      {filterOptions.units.map((unit) => (
+                          <option key={unit.id} value={unit.id}>
+                              {unit.unitCode} - {unit.unitName}
+                          </option>
+                      ))}
+                  </select>
+                  <Input type="date" name="expenseDate" required />
+                  <Input name="category" placeholder="Category (cleaning, utility, maintenance...)" required />
+                  <Input type="number" name="amount" placeholder="Amount (KES)" min={1} required />
+                  <Input name="vendorName" placeholder="Vendor name" />
+                  <Input name="etimsReceiptNumber" placeholder="eTIMS receipt number" />
+                  <Input name="notes" placeholder="Notes" />
+                  <Button type="submit">Save Expense</Button>
+              </form>
+              <p className="text-sm text-on-surface-variant">
+                  Total expenses this month: <span className="font-semibold text-on-surface">KES {summary.expenseTotal.toLocaleString()}</span> ({summary.expenseCount} entries)
+              </p>
+          </div>
         <div className="space-y-5">
           <h2 className="text-2xl font-semibold tracking-tight">Month-End Exports</h2>
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3 justify-center w-full">
             <Link href={`/compliance/export/tourism-levy?${filterQuery.toString()}`}>
-              <Button className="w-full justify-start h-12">Export Tourism Levy CSV</Button>
+              <Button variant='default' className="w-full justify-start h-12">Export Tourism Levy CSV</Button>
             </Link>
             <Link href={`/compliance/export/etims-expenses?${filterQuery.toString()}`}>
               <Button variant="outline" className="w-full justify-start h-12">Export eTIMS Expenses CSV</Button>
             </Link>
             <Link href={`/compliance/export/kra-zip?${filterQuery.toString()}`}>
-              <Button variant="secondary" className="w-full justify-start h-12 font-bold text-primary">Export KRA Compliance ZIP</Button>
+              <Button variant="secondary" className="w-full justify-start h-12 font-bold text-on-secondary!">Export KRA Compliance ZIP</Button>
             </Link>
           </div>
           <form action={closeComplianceMonthAction} className="pt-4">
@@ -142,47 +183,6 @@ export default async function CompliancePage({
           </form>
           <p className="text-xs text-on-surface-variant">
             Closing stores totals + audit record for this month. Re-closing updates the snapshot and logs a new audit event.
-          </p>
-        </div>
-
-        <div className="space-y-5">
-          <h2 className="text-2xl font-semibold tracking-tight">Add Compliance Expense</h2>
-          <form action={createComplianceExpenseAction} className="space-y-3 border-y border-outline-variant/15 py-5">
-            <input type="hidden" name="monthKey" value={monthKey} />
-            <select
-              name="propertyId"
-              defaultValue={propertyId ?? ""}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-            >
-              <option value="">Property (optional)</option>
-              {filterOptions.properties.map((property) => (
-                <option key={property.id} value={property.id}>
-                  {property.name}
-                </option>
-              ))}
-            </select>
-            <select
-              name="unitId"
-              defaultValue={unitId ?? ""}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-            >
-              <option value="">Unit (optional)</option>
-              {filterOptions.units.map((unit) => (
-                <option key={unit.id} value={unit.id}>
-                  {unit.unitCode} - {unit.unitName}
-                </option>
-              ))}
-            </select>
-            <Input type="date" name="expenseDate" required />
-            <Input name="category" placeholder="Category (cleaning, utility, maintenance...)" required />
-            <Input type="number" name="amount" placeholder="Amount (KES)" min={1} required />
-            <Input name="vendorName" placeholder="Vendor name" />
-            <Input name="etimsReceiptNumber" placeholder="eTIMS receipt number" />
-            <Input name="notes" placeholder="Notes" />
-            <Button type="submit">Save Expense</Button>
-          </form>
-          <p className="text-sm text-on-surface-variant">
-            Total expenses this month: <span className="font-semibold text-on-surface">KES {summary.expenseTotal.toLocaleString()}</span> ({summary.expenseCount} entries)
           </p>
         </div>
       </section>

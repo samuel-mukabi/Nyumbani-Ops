@@ -157,12 +157,12 @@ const Integrations = () => {
                                     <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-primary" />
                                     <div className="absolute top-1/2 left-3/4 w-3 h-3 rounded-full bg-secondary" />
                                     <div className="absolute top-3/4 left-1/2 w-3 h-3 rounded-full bg-tertiary" />
-                                    <svg className="absolute inset-0 w-full h-full text-surface-variant/40" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <svg className="absolute inset-0 w-full h-full text-surface-variant" viewBox="0 0 100 100" preserveAspectRatio="none">
                                         <path d="M25 25 L75 50 M75 50 L50 75 M50 75 L25 25" stroke="currentColor" strokeWidth="0.5" fill="none" />
                                     </svg>
                                 </div>
                                 <div className="relative z-10 text-center">
-                                    <div className="text-xl font-bold tracking-[0.5em] uppercase text-surface-variant/40 mb-4 select-none">Architectural</div>
+                                    <div className="text-xl font-bold tracking-[0.5em] uppercase text-surface-variant mb-4 select-none">Architectural</div>
                                     <div className="text-xs text-primary font-mono bg-surface-container py-2 px-6 rounded-full border border-surface-dim uppercase tracking-widest">Manual_Bridge_Protocol</div>
                                 </div>
                             </div>

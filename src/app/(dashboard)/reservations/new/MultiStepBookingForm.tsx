@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronRight, ChevronLeft, CalendarDays } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { getUnitBookingsAction } from "@/lib/actions/bookings";
 
 // MUI Date Picker Imports
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,22 +18,26 @@ interface Property {
   name: string;
   area?: string | null;
   address?: string | null;
+  units: Unit[];
+  [key: string]: any;
 }
 
 interface Unit {
   id: number;
-  buildingId: number;
   name: string;
-  unitCode: string;
+  unitCode?: string | null;
+  ownerId?: number | null;
+  listingUrl?: string | null;
+  status?: string;
+  ownerName?: string;
 }
 
 type MultiStepBookingFormProps = {
   properties: Property[];
-  units: Unit[];
   organizationId: number;
 };
 
-export function MultiStepBookingForm({ properties, units, organizationId }: MultiStepBookingFormProps) {
+export function MultiStepBookingForm({ properties, organizationId }: MultiStepBookingFormProps) {
   const [step, setStep] = useState(1);
   const [propertyId, setPropertyId] = useState<number | null>(null);
   const [unitId, setUnitId] = useState<number | null>(null);
@@ -46,10 +51,20 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
   const [guestPhone, setGuestPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  // Occupancy State
+  const [unitBookings, setUnitBookings] = useState<Array<{ start: Date; end: Date }>>([]);
 
-  const filteredUnits = units.filter((u) => u.buildingId === propertyId);
+  useEffect(() => {
+    if (unitId) {
+      getUnitBookingsAction(unitId).then(setUnitBookings);
+    }
+  }, [unitId]);
+
+
   const selectedProperty = properties.find((p) => p.id === propertyId);
-  const selectedUnit = units.find((u) => u.id === unitId);
+  const filteredUnits = selectedProperty?.units || [];
+  const selectedUnit = filteredUnits.find((u) => u.id === unitId);
 
   const handleNext = () => setStep((s) => s + 1);
   const handleBack = () => setStep((s) => s - 1);
@@ -59,7 +74,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
 
     if (selectionStage === "check-in") {
       setCheckIn(value);
-      if (checkOut && value.isAfter(checkOut)) {
+      if (checkOut && (value.isAfter(checkOut) || isRangeOccupied(value, checkOut))) {
         setCheckOut(null);
       }
       setSelectionStage("check-out");
@@ -69,9 +84,29 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
         setCheckOut(null);
         setSelectionStage("check-out");
       } else {
+        if (checkIn && isRangeOccupied(checkIn, value)) {
+          alert("This range overlaps with an existing booking.");
+          return;
+        }
         setCheckOut(value);
       }
     }
+  };
+
+  const isDateOccupied = (date: Dayjs) => {
+    return unitBookings.some(booking => {
+      const start = dayjs(booking.start).startOf('day');
+      const end = dayjs(booking.end).endOf('day');
+      return date.isAfter(start.subtract(1, 'day')) && date.isBefore(end.add(1, 'day'));
+    });
+  };
+
+  const isRangeOccupied = (start: Dayjs, end: Dayjs) => {
+    return unitBookings.some(booking => {
+      const bStart = dayjs(booking.start);
+      const bEnd = dayjs(booking.end);
+      return (start.isBefore(bEnd) && end.isAfter(bStart));
+    });
   };
 
   const handleSubmit = async () => {
@@ -106,7 +141,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
   // MUI Theme Overrides via sx
   const calendarStyles = {
     width: '100%',
-    maxWidth: '400px',
+    maxWidth: '600px',
     backgroundColor: 'transparent',
     '.MuiPickersCalendarHeader-root': {
       paddingLeft: '0',
@@ -121,20 +156,20 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
     },
     '.MuiDayCalendar-weekDayLabel': {
       color: 'var(--color-on-surface-variant)',
-      fontSize: '0.625rem',
+      fontSize: '0.75rem',
       fontWeight: 700,
       textTransform: 'uppercase',
       letterSpacing: '0.2em',
-      width: '48px',
-      margin: '0 2px',
+      width: '64px',
+      margin: '0 4px',
     },
     '.MuiPickersDay-root': {
       fontFamily: 'var(--font-manrope)',
-      fontSize: '1rem',
+      fontSize: '1.125rem',
       fontWeight: 400,
-      width: '48px',
-      height: '48px',
-      margin: '0 2px',
+      width: '64px',
+      height: '64px',
+      margin: '0 4px',
       borderRadius: '50%',
       color: 'var(--color-foreground)',
       '&:hover': {
@@ -268,24 +303,24 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
               Select <span className="text-primary italic font-serif">Dates.</span>
             </h2>
             
-            <div className="flex flex-col lg:flex-row gap-12 items-start">
-              <div className="flex-1 w-full max-w-sm">
-                <div className="flex items-center gap-4 mb-8">
+            <div className="flex flex-col lg:flex-row gap-20 items-start">
+              <div className="flex-1 w-full max-w-2xl">
+                <div className="flex items-center gap-6 mb-12">
                   <button 
                     onClick={() => setSelectionStage("check-in")}
-                    className={cn("flex-1 px-6 py-4 rounded-2xl border transition-all text-left", 
+                    className={cn("flex-1 px-8 py-6 rounded-3xl border transition-all text-left", 
                       selectionStage === "check-in" ? "border-primary bg-primary/5" : "border-outline-variant/30 opacity-60")}
                   >
                     <span className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block mb-1">Check-in</span>
-                    <span className="text-lg font-semibold">{checkIn ? checkIn.format("MMM D, YYYY") : "Select Date"}</span>
+                    <span className="text-2xl font-semibold">{checkIn ? checkIn.format("MMM D, YYYY") : "Select Date"}</span>
                   </button>
                   <button 
                     onClick={() => setSelectionStage("check-out")}
-                    className={cn("flex-1 px-6 py-4 rounded-2xl border transition-all text-left", 
+                    className={cn("flex-1 px-8 py-6 rounded-3xl border transition-all text-left", 
                       selectionStage === "check-out" ? "border-primary bg-primary/5" : "border-outline-variant/30 opacity-60")}
                   >
                     <span className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block mb-1">Check-out</span>
-                    <span className="text-lg font-semibold">{checkOut ? checkOut.format("MMM D, YYYY") : "Select Date"}</span>
+                    <span className="text-2xl font-semibold">{checkOut ? checkOut.format("MMM D, YYYY") : "Select Date"}</span>
                   </button>
                 </div>
 
@@ -294,6 +329,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
                     value={selectionStage === "check-in" ? checkIn : checkOut}
                     onChange={handleDateChange}
                     minDate={selectionStage === "check-in" ? dayjs() : (checkIn || dayjs())}
+                    shouldDisableDate={(date) => isDateOccupied(date)}
                     sx={calendarStyles}
                   />
                 </LocalizationProvider>
@@ -336,7 +372,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
                 {checkIn && format(checkIn.toDate(), "PPP")} — {checkOut && format(checkOut.toDate(), "PPP")}
               </p>
               <p className="text-lg text-on-surface-variant font-light flex items-center gap-2">
-                {selectedProperty?.name} {selectedUnit && <><span className="opacity-30">•</span> {selectedUnit.name}</>}
+                {selectedProperty?.name} {selectedUnit && <><span className="">•</span> {selectedUnit.name}</>}
               </p>
             </div>
 
@@ -347,7 +383,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
                   type="text"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full bg-transparent border-b border-outline-variant/30 px-0 py-4 text-3xl focus:outline-none focus:border-primary transition-all placeholder:text-outline-variant/30 font-light tracking-tight"
+                  className="w-full bg-transparent border-b border-outline-variant/30 px-0 py-4 text-3xl focus:outline-none focus:border-primary transition-all placeholder:text-outline-variant font-light tracking-tight"
                   placeholder="John Doe"
                 />
               </div>
@@ -357,7 +393,7 @@ export function MultiStepBookingForm({ properties, units, organizationId }: Mult
                   type="tel"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
-                  className="w-full bg-transparent border-b border-outline-variant/30 px-0 py-4 text-3xl focus:outline-none focus:border-primary transition-all placeholder:text-outline-variant/30 font-light tracking-tight"
+                  className="w-full bg-transparent border-b border-outline-variant/30 px-0 py-4 text-3xl focus:outline-none focus:border-primary transition-all placeholder:text-outline-variant font-light tracking-tight"
                   placeholder="254700000000"
                   minLength={10}
                 />

@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db";
 import { properties, bookings } from "@/db/schema";
 import { eq, and, gt } from "drizzle-orm";
@@ -9,8 +11,6 @@ export async function getPublicPropertyDetails(slug: string) {
       id: true,
       name: true,
       address: true,
-      wifiName: true,
-      wifiPassword: true,
       houseRules: true,
       slug: true,
     },
@@ -38,4 +38,19 @@ export async function getPublicPropertyDetails(slug: string) {
       to: slot.checkOutDate,
     })),
   };
+}
+
+export async function getPublicBookingDetails(bookingId: string) {
+  const id = parseInt(bookingId);
+  if (isNaN(id)) return null;
+
+  const booking = await db.query.bookings.findFirst({
+    where: eq(bookings.id, id),
+    with: {
+      property: true,
+      unit: true,
+    },
+  });
+
+  return booking || null;
 }

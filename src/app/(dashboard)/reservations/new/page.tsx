@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { users, organizations, properties, units } from "@/db/schema";
+import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { MultiStepBookingForm } from "./MultiStepBookingForm";
+import { getPropertiesWithUnitsAction } from "@/lib/actions/properties";
 
 export default async function NewReservationPage() {
   const supabase = await createClient();
@@ -21,13 +22,7 @@ export default async function NewReservationPage() {
     redirect('/onboarding');
   }
 
-  const orgProperties = await db.query.properties.findMany({
-    where: eq(properties.organizationId, dbUser.organizationId),
-  });
-
-  const orgUnits = await db.query.units.findMany({
-    where: eq(units.organizationId, dbUser.organizationId),
-  });
+  const { properties: orgProperties } = await getPropertiesWithUnitsAction();
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -44,7 +39,6 @@ export default async function NewReservationPage() {
 
       <MultiStepBookingForm 
         properties={orgProperties} 
-        units={orgUnits}
         organizationId={dbUser.organizationId}
       />
     </div>

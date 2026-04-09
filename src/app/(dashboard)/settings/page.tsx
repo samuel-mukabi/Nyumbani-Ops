@@ -25,73 +25,93 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="space-y-12 animate-fade-in pb-20">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 border-b border-outline-variant/30 pb-8">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl lg:text-7xl font-bold font-heading text-foreground mb-4 tracking-tighter">
-            Your <span className="text-primary italic font-serif">Profile.</span>
+    <div className="max-w-6xl max-h-screen mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      {/* Header Narrative */}
+      <header className="flex flex-col md:flex-row md:justify-between md:items-end gap-8 border-b border-outline-variant/20 pb-12">
+        <div className="max-w-2xl space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold font-heading text-foreground tracking-tighter leading-none">
+            User <span className="text-primary italic font-serif">Settings.</span>
           </h1>
-          <p className="text-xl text-on-surface-variant font-light leading-relaxed">
-            Manage your personal settings and contact information.
+          <p className="text-lg text-on-surface-variant font-light leading-relaxed max-w-lg">
+            Personal identification and secure communication channels for agency operations.
           </p>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-xl">
-        <form action={updateProfileAction} className="space-y-10">
-          <div className="space-y-4">
-            <Label htmlFor="email" className="text-xs font-bold uppercase tracking-[0.2em] text-outline">Email Address</Label>
-            <Input 
-              id="email" 
-              value={user.email || ""} 
-              disabled 
-              className="h-14 bg-surface-container-low/30 text-on-surface-variant border-none opacity-60 font-medium px-6 rounded-2xl"
-            />
-            <p className="text-[10px] text-on-surface-variant italic">Securely managed by Supabase Auth</p>
+      {/* Settings Manifest */}
+      <form action={updateProfileAction} className="space-y-10">
+        {/* Verification Section */}
+        <section className="space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
+            <div className="space-y-6">
+              <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Email</Label>
+              <div className="flex flex-col gap-3">
+                <p className="text-xl font-light text-on-surface tabular-nums cursor-not-allowed">
+                  {user.email}
+                </p>
+                <div className="flex items-center gap-2 text-[10px] text-on-surface-variant italic font-serif">
+                  <span className="w-1 h-1 rounded-full bg-primary" />
+                  Primary authentication provider used by the system
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <Label htmlFor="firstName" className="text-xs font-bold uppercase tracking-[0.2em] text-outline">First Name</Label>
+        </section>
+
+        {/* Profile Details Section */}
+        <section className="space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
+            <div className="space-y-6 group">
+              <Label htmlFor="firstName" className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary transition-colors">First Name</Label>
               <Input 
                   id="firstName" 
                   name="firstName" 
                   defaultValue={dbUser.firstName || ""} 
                   placeholder="John" 
-                  className="h-14 bg-transparent border-b border-outline-variant/30 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-xl font-medium"
+                  className="h-16 bg-transparent border-0 border-b border-outline-variant/20 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-3xl! font-light tracking-tight placeholder:text-on-surface-variant"
               />
             </div>
-            <div className="space-y-4">
-              <Label htmlFor="lastName" className="text-xs font-bold uppercase tracking-[0.2em] text-outline">Last Name</Label>
+            <div className="space-y-6 group">
+              <Label htmlFor="lastName" className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary transition-colors">Last Name</Label>
               <Input 
                   id="lastName" 
                   name="lastName" 
                   defaultValue={dbUser.lastName || ""} 
                   placeholder="Doe" 
-                  className="h-14 bg-transparent border-b border-outline-variant/30 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-xl font-medium"
+                  className="h-16 bg-transparent border-0 border-b border-outline-variant/20 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-3xl! font-light tracking-tight placeholder:text-on-surface-variant"
               />
             </div>
           </div>
+        </section>
 
-          <div className="space-y-4">
-            <Label htmlFor="phoneNumber" className="text-xs font-bold uppercase tracking-[0.2em] text-outline">Phone Number</Label>
+        {/* Contact Manifest */}
+        <section className="space-y-12">
+          <div className="max-w-2xl space-y-6 group">
+            <Label htmlFor="phoneNumber" className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary transition-colors">Phone Number</Label>
             <Input 
               id="phoneNumber" 
               name="phoneNumber" 
               defaultValue={dbUser.phoneNumber || ""} 
               placeholder="+254 7XX XXX XXX" 
-              className="h-14 bg-transparent border-b border-outline-variant/30 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-xl font-medium"
+              className="h-16 bg-transparent border-0 border-b border-outline-variant/20 rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-all text-3xl! font-light tracking-tight tabular-nums placeholder:text-on-surface-variant"
             />
-            <p className="text-[10px] text-on-surface-variant italic">For automated guest communication and M-Pesa payouts</p>
+            <p className="text-[10px] text-on-surface-variant font-medium font-serif italic max-w-md leading-relaxed">
+              Mapped for automated guest outreach, m-pesa payment confirmation, and secure host payouts.
+            </p>
           </div>
+        </section>
 
-          <div className="pt-6">
-            <Button type="submit" className="h-16 px-10 rounded-2xl font-bold text-lg shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all">
-              Save Changes
+        {/* Actions */}
+        <footer className="pt-20 border-t border-outline-variant/5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="max-w-xs">
+            </div>
+            <Button type="submit" size="lg" className="">
+              Commit Changes
             </Button>
           </div>
-        </form>
-      </div>
+        </footer>
+      </form>
     </div>
   );
 }

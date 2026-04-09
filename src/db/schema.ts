@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, timestamp, integer, jsonb, numeric, date, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, timestamp, integer, jsonb, numeric, date, boolean, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const organizations = pgTable('organizations', {
@@ -113,7 +113,7 @@ export const units = pgTable('units', {
   organizationId: integer('organization_id').references(() => organizations.id).notNull(),
   buildingId: integer('building_id').references(() => buildings.id).notNull(),
   ownerId: integer('owner_id').references(() => owners.id),
-  unitCode: varchar('unit_code', { length: 100 }).notNull(),
+  unitCode: varchar('unit_code', { length: 100 }),
   name: varchar('name', { length: 255 }).notNull(),
   listingUrl: text('listing_url'),
   channelListingId: varchar('channel_listing_id', { length: 255 }),
@@ -122,7 +122,9 @@ export const units = pgTable('units', {
   status: varchar('status', { length: 50 }).notNull().default('active'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-});
+}, (table) => [
+  unique('org_unit_name_unique').on(table.organizationId, table.name)
+]);
 
 export const unitContracts = pgTable('unit_contracts', {
   id: serial('id').primaryKey(),

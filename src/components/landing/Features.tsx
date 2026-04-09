@@ -66,7 +66,7 @@ const Features = () => {
                 {/* Index / Tag */}
                 <div className="lg:w-1/4">
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="text-4xl font-serif italic text-primary/30 group-hover:text-primary transition-colors duration-500">0{index + 1}</span>
+                    <span className="text-4xl font-serif italic text-primary group-hover:text-primary transition-colors duration-500">0{index + 1}</span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-surface-variant group-hover:text-on-primary group-hover:bg-primary transition-colors duration-500 px-3 py-1 bg-surface-container-low rounded-full">
                       {feature.tag}
                     </span>

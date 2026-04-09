@@ -142,7 +142,7 @@ export function DashboardShell({
       )}
 
       <aside
-        className={`relative z-40 flex-shrink-0 bg-surface-container-low flex flex-col pt-8 transition-all duration-200 ${
+        className={`relative z-40 shrink-0 bg-surface-container-low flex flex-col pt-8 transition-all duration-200 ${
           isMobile
             ? `fixed left-0 top-0 h-screen ${shouldShowSidebar ? "translate-x-0" : "-translate-x-full"}`
             : "translate-x-0"
@@ -150,15 +150,15 @@ export function DashboardShell({
         style={{ width: isMobile ? mobileSidebarWidth : effectiveWidth }}
       >
         <div className={`pb-8 flex items-center gap-3 ${collapsed ? "px-4 justify-center" : "px-8"}`}>
-          <span className="text-xl font-heading font-medium text-on-surface tracking-tight">
-            {collapsed ? "NO" : <>Nyumbani<span className="opacity-40">Ops</span></>}
+          <span className="text-xl font-heading font-bold text-on-surface tracking-tight">
+              {collapsed ? <>N<span className='text-primary'>O</span></> : <>Nyumbani-<span className="text-primary">Ops</span></>}
           </span>
         </div>
 
         <div className={`${collapsed ? "px-2 pb-4" : "px-6 pb-6"}`}>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className={`font-sans text-on-surface font-medium w-full text-left bg-surface-container-lowest border border-outline-variant/20 rounded-lg p-3 h-12 transition-colors shadow-[0_4px_12px_rgba(28,28,24,0.02)] flex items-center justify-between hover:bg-surface-container-low focus:outline-none ${
+              className={`font-sans text-on-surface font-medium w-full text-left bg-surface-container-lowest border border-outline-variant/20 rounded-lg p-3 h-12 transition-colors shadow-[0_4px_12px_rgba(28,28,24,0.02)] flex items-center justify-between hover:text-on-primary hover:bg-primary-container focus:outline-none group ${
                 collapsed ? "justify-center px-0" : ""
               }`}
             >
@@ -167,11 +167,11 @@ export function DashboardShell({
               ) : (
                 <>
                   <span className="text-sm font-semibold truncate">{orgName}</span>
-                  <span className="text-[10px] text-primary italic font-serif">Pro</span>
+                  <span className="text-[10px] text-primary italic font-serif group-hover:text-on-primary">Pro</span>
                 </>
               )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[228px] bg-surface-container-lowest border-outline-variant/20 rounded-xl shadow-xl p-1">
+            <DropdownMenuContent align="start" className="w-57 bg-surface-container-lowest border-outline-variant/20 rounded-xl shadow-xl p-1">
               <DropdownMenuItem className="text-sm font-semibold rounded-lg focus:bg-surface-container-low cursor-default">
                 {orgName}
               </DropdownMenuItem>
@@ -195,7 +195,7 @@ export function DashboardShell({
               </div>
               {!collapsed && (
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold truncate max-w-[120px]">{userDisplayName}</span>
+                  <span className="text-sm font-semibold truncate max-w-30">{userDisplayName}</span>
                   <span className="text-[10px] text-on-surface-variant group-hover:text-primary transition-colors">Edit Profile</span>
                 </div>
               )}
@@ -231,7 +231,7 @@ export function DashboardShell({
               <button
                 type="button"
                 onClick={dismissShortcutHint}
-                className="text-on-surface-variant/70 hover:text-on-surface transition-colors"
+                className="text-on-surface-variant hover:text-on-surface transition-colors"
                 aria-label="Dismiss shortcut hint"
               >
                 <X className="w-3.5 h-3.5" />
@@ -254,8 +254,8 @@ export function DashboardShell({
       </aside>
 
       <main className="flex-1 flex flex-col overflow-hidden bg-background relative">
-        <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-primary/3 blur-[140px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-secondary/3 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-10%] w-200 h-200 bg-primary/3 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-150 h-150 bg-secondary/3 blur-[120px] rounded-full pointer-events-none" />
 
         {isMobile && (
           <div className="absolute left-4 top-4 z-20">
@@ -271,7 +271,7 @@ export function DashboardShell({
         )}
 
         <div className="flex-1 overflow-y-auto px-6 py-16 lg:px-24 lg:py-24 relative z-10">
-          <div className="max-w-[1400px] mx-auto">{children}</div>
+          <div className="max-w-350 mx-auto">{children}</div>
         </div>
       </main>
     </div>

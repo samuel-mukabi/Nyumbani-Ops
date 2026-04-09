@@ -48,7 +48,7 @@ const Hero = () => {
             </FadeIn>
 
             <FadeIn delay={300}>
-                <div className="flex flex-wrap items-center gap-8 text-on-surface-variant/60">
+                <div className="flex flex-wrap items-center gap-8 text-on-surface-variant">
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                         <span className="text-[10px] font-bold uppercase tracking-widest">Easy to Use</span>

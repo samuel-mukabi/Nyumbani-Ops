@@ -18,7 +18,7 @@ export default async function PropertiesPage() {
             Manage your locations, track lock access, and oversee all active properties.
           </p>
         </div>
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
             <AddPropertyDialog />
         </div>
       </div>

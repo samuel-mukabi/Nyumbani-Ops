@@ -21,8 +21,8 @@ export async function POST(req: Request) {
         where: eq(unitContracts.unitId, unitId)
       });
       if (contract?.monthlyRent) {
-         // rough daily rate logic (mock)
-         amount = Math.floor(contract.monthlyRent / 30);
+        // rough daily rate logic (mock)
+        amount = Math.floor(contract.monthlyRent / 30);
       }
     }
 
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const referenceString = `NYO-${propertyId}-${Date.now().toString().slice(-4)}`;
 
     let checkoutRequestId = `MOCK-REQ-${Date.now()}`;
-    
+
     // Attempt real Daraja Push, fallback to mock if unconfigured/failed
     try {
       const pushRes = await darajaClient.initiateSTKPush(
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         checkoutRequestId = pushRes.data.CheckoutRequestID;
       }
     } catch (pushErr) {
-       console.warn("[M-Pesa] Using mock push. Daraja engine not fully configured:", pushErr);
+      console.warn("[M-Pesa] Using mock push. Daraja engine not fully configured:", pushErr);
     }
 
     // Create the pending booking record
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       currency: "KES",
     });
 
-    return NextResponse.json({ success: true, message: "Prompt dispatched" });
+    return NextResponse.json({ success: true, message: "Prompt sent" });
   } catch (error) {
     console.error("Booking prompt error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

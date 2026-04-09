@@ -51,7 +51,7 @@ const CTA = () => {
                 </a>
               </div>
               
-              <div className="mt-12 flex items-center gap-8 text-on-surface-variant/60">
+              <div className="mt-12 flex items-center gap-8 text-on-surface-variant">
                 <div className="flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-primary" />
                   <span className="text-xs font-bold uppercase tracking-widest">No Commitment</span>
